@@ -26,11 +26,9 @@ import android.widget.Button;
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
-import com.example.aria.easytouch.widget.easytouch.EasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
 import com.example.aria.easytouch.widget.easytouch.ScreenShotUtil;
-import com.example.aria.easytouch.widget.easytouch.menu.MainView;
 
 /**
  * Created by Aria on 2017/7/17.
@@ -52,7 +50,6 @@ public class EasyTouchService extends Service{
     private float startX = 0, startY = 0;
     private float startRawX = 0, startRawY = 0;
     private int iconViewX = 50, iconViewY = 50;
-    private EasyTouchMenuHolder easyTouchMenuHolder;
     private NewEasyTouchMenuHolder newEasyTouchMenuHolder;
 
     private WindowManager windowManager;
@@ -92,7 +89,6 @@ public class EasyTouchService extends Service{
         windowLayoutParams.format = PixelFormat.RGBA_8888;
         windowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
-
         addIconView();
     }
 
@@ -103,10 +99,6 @@ public class EasyTouchService extends Service{
     }
 
     private void addIconView(){
-//        if (easyTouchMenuHolder != null){
-//            if (easyTouchMenuHolder.getMainView() != null)
-//                windowManager.removeView(easyTouchMenuHolder.getMainView());
-//        }
         if (newEasyTouchMenuHolder != null){
             if (newEasyTouchMenuHolder.getMainView() != null)
                 windowManager.removeView(newEasyTouchMenuHolder.getMainView());
@@ -175,6 +167,29 @@ public class EasyTouchService extends Service{
             newEasyTouchMenuHolder = null;
             newEasyTouchMenuHolder = new NewEasyTouchMenuHolder(getApplicationContext());
             newEasyTouchMenuHolder.setOnMenuHolderEventListener(new MenuHolderEventListener(newEasyTouchMenuHolder));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            newEasyTouchMenuHolder.setOnScreenshotEventListener(new ScreenShotUtil.OnScreenshotEventListener() {
+                @Override
+                public void beforeScreenshot() {
+
+                }
+
+                @Override
+                public void onImageCaptured(Image image) {
+
+                }
+
+                @Override
+                public void afterScreenshot() {
+                    if (iconView != null && iconView.getVisibility() != View.VISIBLE)
+                        iconView.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onPostImageSaved(boolean succeed) {
+
+                }
+            });
 
         }
 
@@ -187,40 +202,6 @@ public class EasyTouchService extends Service{
 
     }
 
-    private void addOldMenuView(){
-        if (iconView != null)windowManager.removeView(iconView);
-        if (easyTouchMenuHolder == null || easyTouchMenuHolder.getMainView() == null){
-            Log.d("MainActivity","new easyTouchMenuHolder");
-            if (easyTouchMenuHolder!= null) easyTouchMenuHolder.onDestory();
-            easyTouchMenuHolder = null;
-            easyTouchMenuHolder = new EasyTouchMenuHolder(getApplicationContext());
-            easyTouchMenuHolder.setOnHolderScreenshotEventListener(new OnHolderScreenshotEventListener(easyTouchMenuHolder));
-            easyTouchMenuHolder.setOnHolderEventListener(new EasyTouchMenuHolder.onHolderEventListener() {
-                @Override
-                public void beforeItemPerform(View view) {
-                    switch (view.getId()){
-                        case R.id.ll_screenshot:
-                            addIconView();
-                            iconView.setVisibility(View.GONE);
-                            break;
-                    }
-                }
-
-                @Override
-                public void afterItemClick(View view) {
-                    addIconView();
-                }
-            });
-        }
-
-        windowLayoutParams.alpha = 1f;
-        windowLayoutParams.x = 0;
-        windowLayoutParams.y = 0;
-        windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-        windowManager.addView(easyTouchMenuHolder.getMainView(),windowLayoutParams);
-
-    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -233,11 +214,11 @@ public class EasyTouchService extends Service{
         if (serviceReceiver != null)
         unregisterReceiver(serviceReceiver);
 
-        if (easyTouchMenuHolder != null){
-            if (easyTouchMenuHolder.getMainView()!=null)
-                try {windowManager.removeView(easyTouchMenuHolder.getMainView());}
+        if (newEasyTouchMenuHolder != null){
+            if (newEasyTouchMenuHolder.getMainView() != null)
+                try {windowManager.removeView(newEasyTouchMenuHolder.getMainView());}
                 catch (Exception e){Log.d("MainActivity",TAG + "onDestory easyHolder"+e.getMessage());}
-            easyTouchMenuHolder.onDestory();
+            newEasyTouchMenuHolder.onDestory();
         }
 
         if (iconView != null){
@@ -321,37 +302,6 @@ public class EasyTouchService extends Service{
         }
     }
 
-    private class OnHolderScreenshotEventListener implements ScreenShotUtil.OnScreenshotEventListener{
-
-        private ScreenShotUtil.OnScreenshotEventListener onScreenshotEventListener;
-
-        public OnHolderScreenshotEventListener(ScreenShotUtil.OnScreenshotEventListener onScreenshotEventListener){
-            this.onScreenshotEventListener = onScreenshotEventListener;
-        }
-
-        @Override
-        public void beforeScreenshot() {
-            onScreenshotEventListener.beforeScreenshot();
-        }
-
-        @Override
-        public void onImageCaptured(Image image) {
-            onScreenshotEventListener.onImageCaptured(image);
-        }
-
-        @Override
-        public void afterScreenshot() {
-            onScreenshotEventListener.afterScreenshot();
-            if (iconView != null && iconView.getVisibility() != View.VISIBLE)
-            iconView.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onPostImageSaved(boolean succeed) {
-            onScreenshotEventListener.onPostImageSaved(succeed);
-        }
-    }
-
     private class MenuHolderEventListener implements OnMenuHolderEventListener{
 
         private OnMenuHolderEventListener onMenuHolderEventListener;
@@ -362,7 +312,10 @@ public class EasyTouchService extends Service{
 
         @Override
         public void beforeItemPerform(View view) {
-
+            if (((String)view.getTag()).equals(getResources().getString(R.string.menu_screenshot))){
+                addIconView();
+                iconView.setVisibility(View.GONE);
+            }
         }
 
         @Override

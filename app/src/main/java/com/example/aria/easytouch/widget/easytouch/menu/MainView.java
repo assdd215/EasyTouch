@@ -78,7 +78,7 @@ public class MainView {
         itemLayout.setOrientation(LinearLayout.VERTICAL);
         RelativeLayout.LayoutParams itemLayoutParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,72));
         itemLayout.setOnClickListener(onClickListener);
-
+        itemLayout.setTag(itemTitle);
 
         iconView.setImageDrawable(icon);
         iconView.setScaleType(ImageView.ScaleType.CENTER_CROP);

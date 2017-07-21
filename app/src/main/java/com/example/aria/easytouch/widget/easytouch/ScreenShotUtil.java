@@ -168,7 +168,7 @@ public class ScreenShotUtil {
             super.onPostExecute(aBoolean);
 
             if (aBoolean){
-                Toast.makeText(context,context.getString(R.string.msg_screenshot_success) +FileUtil.getAppPath(context)+FileUtil.SCREENCAPTURE_PATH,Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,context.getString(R.string.msg_screenshot_success) +FileUtil.getAppPath(context)+File.separator+FileUtil.SCREENCAPTURE_PATH,Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(context,context.getString(R.string.msg_screenshot_fail),Toast.LENGTH_SHORT).show();
             }

@@ -12,6 +12,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
+import com.example.aria.easytouch.widget.easytouch.camera.Camera2Impl;
+import com.example.aria.easytouch.widget.easytouch.camera.CameraImpl;
 import com.example.aria.easytouch.widget.easytouch.camera.LightCamera;
 import com.example.aria.easytouch.widget.easytouch.menu.MainView;
 
@@ -34,6 +37,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private MainView mainView;
     private OnMenuHolderEventListener onMenuHolderEventListener;
     private LightCamera cameraUtil;
+    private ScreenShotUtil screenShotUtil;
 
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override
@@ -63,20 +67,29 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                         break;
                 }
             }
-
-            if (intent.getAction().equals(Constants.ACTIVATE_SCREENSHOT)){
-//                btnScreenShot.setClickable(true);
-//                btnScreenShot.setBackgroundResource(R.drawable.menu_cut_enable);
-            }
         }
     };
 
     public NewEasyTouchMenuHolder(Context context){
         this.context = context;
         mainView = new MainView(context);
+        initData();
         initMenuItems();
         updateMenuIcons();
+
+
+
         initReceiver();
+    }
+
+    private void initData(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            cameraUtil = new Camera2Impl(context);
+        else cameraUtil = new CameraImpl(context);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            screenShotUtil = new ScreenShotUtil(context);
+
     }
 
     private void initMenuItems(){
@@ -124,8 +137,20 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMenuHolderEventListener.beforeItemPerform(v);
-                onMenuHolderEventListener.afterItemClick(v);
+                Log.d("MainActivity","btnScreenshot Click");
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+                    if (ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                        Toast.makeText(context,context.getResources().getString(R.string.msg_without_write_file_permission),Toast.LENGTH_SHORT).show();
+                        onMenuHolderEventListener.afterItemClick(v);
+                        return;
+                    }
+                    onMenuHolderEventListener.beforeItemPerform(v);
+                    screenShotUtil.startScreenShot();
+                }
+                else {
+                    Toast.makeText(context,context.getResources().getString(R.string.msg_version_too_old),Toast.LENGTH_SHORT).show();
+                    onMenuHolderEventListener.afterItemClick(v);
+                }
             }
         });
 
@@ -133,6 +158,18 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             @Override
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+                    BluetoothAdapter adapter =  ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
+                    if (adapter == null){
+                        Toast.makeText(context,context.getString(R.string.msg_unsupport_blt),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (adapter.isEnabled()){
+                        adapter.disable();
+                    }else {
+                        adapter.enable();
+                    }
+                }
                 onMenuHolderEventListener.afterItemClick(v);
             }
         });
@@ -174,9 +211,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 if (ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
                     Toast.makeText(context,context.getString(R.string.msg_without_camera_permission),Toast.LENGTH_SHORT).show();
                 }else cameraUtil.turnOnLight();
-//                if (cameraUtil.getOpenCamera())
-//                    btnLight.setBackgroundResource(R.drawable.menu_flashlight_on);
-//                else btnLight.setBackgroundResource(R.drawable.menu_flashlight_off);
+                if (cameraUtil.getOpenCamera())
+                    mainView.findViewByTitle(context.getString(R.string.menu_light)).
+                            getImageView().setImageResource(R.drawable.menu_flashlight_on);
+                else mainView.findViewByTitle(context.getString(R.string.menu_light)).getImageView()
+                        .setImageResource(R.drawable.menu_flashlight_off);
                 onMenuHolderEventListener.afterItemClick(v);
             }
         });
@@ -204,6 +243,17 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         context.registerReceiver(customReceiver,customFilter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setOnScreenshotEventListener(ScreenShotUtil.OnScreenshotEventListener onScreenshotEventListener){
+        screenShotUtil.setOnScreenshotEventListener(onScreenshotEventListener);
+    }
+
+    public void onDestory(){
+        context.unregisterReceiver(customReceiver);
+    }
+
+
+
     public void updateMenuIcons(){
         //检测wifi
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
@@ -228,9 +278,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         }
 
         //检测手电筒
-//        if (cameraUtil.getOpenCamera())
-//            btnLight.setBackgroundResource(R.drawable.menu_flashlight_on);
-//        else btnLight.setBackgroundResource(R.drawable.menu_flashlight_off);
+        if (cameraUtil.getOpenCamera())
+            mainView.findViewByTitle(context.getString(R.string.menu_light)).
+                    getImageView().setImageResource(R.drawable.menu_flashlight_on);
+        else mainView.findViewByTitle(context.getString(R.string.menu_light)).
+        getImageView().setImageResource(R.drawable.menu_flashlight_off);
 
 
     }
