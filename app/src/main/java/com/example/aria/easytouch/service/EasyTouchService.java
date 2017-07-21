@@ -27,7 +27,10 @@ import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.EasyTouchMenuHolder;
+import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
+import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
 import com.example.aria.easytouch.widget.easytouch.ScreenShotUtil;
+import com.example.aria.easytouch.widget.easytouch.menu.MainView;
 
 /**
  * Created by Aria on 2017/7/17.
@@ -50,6 +53,7 @@ public class EasyTouchService extends Service{
     private float startRawX = 0, startRawY = 0;
     private int iconViewX = 50, iconViewY = 50;
     private EasyTouchMenuHolder easyTouchMenuHolder;
+    private NewEasyTouchMenuHolder newEasyTouchMenuHolder;
 
     private WindowManager windowManager;
     private WindowManager.LayoutParams windowLayoutParams;
@@ -99,9 +103,13 @@ public class EasyTouchService extends Service{
     }
 
     private void addIconView(){
-        if (easyTouchMenuHolder != null){
-            if (easyTouchMenuHolder.getMainView() != null)
-                windowManager.removeView(easyTouchMenuHolder.getMainView());
+//        if (easyTouchMenuHolder != null){
+//            if (easyTouchMenuHolder.getMainView() != null)
+//                windowManager.removeView(easyTouchMenuHolder.getMainView());
+//        }
+        if (newEasyTouchMenuHolder != null){
+            if (newEasyTouchMenuHolder.getMainView() != null)
+                windowManager.removeView(newEasyTouchMenuHolder.getMainView());
         }
         if (iconView == null){
             iconView = new Button(getApplicationContext());
@@ -159,6 +167,27 @@ public class EasyTouchService extends Service{
     }
 
     private void addMenuView(){
+        if (iconView != null)windowManager.removeView(iconView);
+        if (newEasyTouchMenuHolder == null || newEasyTouchMenuHolder.getMainView() == null ){
+            if (newEasyTouchMenuHolder != null){
+                //TODO 一些销毁操作
+            }
+            newEasyTouchMenuHolder = null;
+            newEasyTouchMenuHolder = new NewEasyTouchMenuHolder(getApplicationContext());
+            newEasyTouchMenuHolder.setOnMenuHolderEventListener(new MenuHolderEventListener(newEasyTouchMenuHolder));
+
+        }
+
+        windowLayoutParams.alpha = 1f;
+        windowLayoutParams.x = 0;
+        windowLayoutParams.y = 0;
+        windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+        windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        windowManager.addView(newEasyTouchMenuHolder.getMainView(),windowLayoutParams);
+
+    }
+
+    private void addOldMenuView(){
         if (iconView != null)windowManager.removeView(iconView);
         if (easyTouchMenuHolder == null || easyTouchMenuHolder.getMainView() == null){
             Log.d("MainActivity","new easyTouchMenuHolder");
@@ -292,7 +321,6 @@ public class EasyTouchService extends Service{
         }
     }
 
-
     private class OnHolderScreenshotEventListener implements ScreenShotUtil.OnScreenshotEventListener{
 
         private ScreenShotUtil.OnScreenshotEventListener onScreenshotEventListener;
@@ -321,6 +349,27 @@ public class EasyTouchService extends Service{
         @Override
         public void onPostImageSaved(boolean succeed) {
             onScreenshotEventListener.onPostImageSaved(succeed);
+        }
+    }
+
+    private class MenuHolderEventListener implements OnMenuHolderEventListener{
+
+        private OnMenuHolderEventListener onMenuHolderEventListener;
+
+        public MenuHolderEventListener(OnMenuHolderEventListener onMenuHolderEventListener){
+            this.onMenuHolderEventListener = onMenuHolderEventListener;
+        }
+
+        @Override
+        public void beforeItemPerform(View view) {
+
+        }
+
+        @Override
+        public void afterItemClick(View view) {
+            this.onMenuHolderEventListener.afterItemClick(view);
+            Log.d("MainActivity","view.getId:"+view.getId());
+            addIconView();
         }
     }
 }
