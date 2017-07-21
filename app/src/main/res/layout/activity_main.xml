@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorCommonBackground"
+    tools:context="com.example.aria.easytouch.activity.MainActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/titleTextSize"
+        android:text="EASY    TOUCH"
+        android:id="@+id/title"
+        android:textColor="@color/colorTitle"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/titleMarginTop"/>
+
+
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:id="@+id/base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="30dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:background="@android:color/transparent">
+
+                <ImageView
+                    android:layout_width="@dimen/setting_icon_size"
+                    android:layout_height="@dimen/setting_icon_size"
+                    android:id="@+id/open_floatwindow_icon"
+                    android:src="@mipmap/icon_easytouch"
+                    android:layout_marginLeft="@dimen/setting_icon_margin"
+                    android:layout_marginStart="@dimen/setting_icon_margin"/>
+
+                <TextView
+                    android:id="@+id/floatwindow_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_text_height"
+                    android:text="@string/setting_openFloatingWindow"
+                    android:textSize="@dimen/setting_text_size"
+                    android:textColor="@color/colorTitle"
+                    android:gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/open_floatwindow_icon"
+                    android:layout_toRightOf="@+id/open_floatwindow_icon"
+                    android:layout_toStartOf="@+id/floatWindowSwitch"
+                    android:layout_toLeftOf="@+id/floatWindowSwitch"/>
+                <com.sevenheaven.iosswitch.ShSwitchView
+                    android:layout_width="@dimen/setting_switch_width"
+                    android:layout_height="@dimen/setting_switch_height"
+                    android:id="@+id/floatWindowSwitch"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/setting_icon_margin"
+                    android:layout_marginEnd="@dimen/setting_icon_margin"
+                    app:tintColor="@color/colorGreen" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@android:color/transparent"
+                android:layout_margin="10dp">
+                <ImageView
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:id="@+id/open_screenshot_icon"
+                    android:src="@mipmap/icon_screenshot"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"/>
+                <TextView
+                    android:id="@+id/screenshot_textview"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/setting_text_height"
+                    android:text="@string/setting_openScreenshot"
+                    android:textSize="@dimen/setting_text_size"
+                    android:textColor="@color/colorTitle"
+                    android:gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/open_screenshot_icon"
+                    android:layout_toRightOf="@+id/open_screenshot_icon"
+                    android:layout_toStartOf="@+id/screenShotSwitch"
+                    android:layout_toLeftOf="@+id/screenShotSwitch"/>
+                <com.sevenheaven.iosswitch.ShSwitchView
+                    android:layout_width="@dimen/setting_switch_width"
+                    android:layout_height="@dimen/setting_switch_height"
+                    android:id="@+id/screenShotSwitch"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="@dimen/setting_icon_margin"
+                    android:layout_marginEnd="@dimen/setting_icon_margin"
+                    app:tintColor="@color/colorGreen"/>
+            </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

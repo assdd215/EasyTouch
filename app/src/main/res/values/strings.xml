@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">EasyTouch</string>
+    
+    
+    <string name="menu_tel">电话</string>
+    <string name="menu_message">短信</string>
+    <string name="menu_camera">相机</string>
+    <string name="menu_screenshot">截图</string>
+    <string name="menu_network">移动网络</string>
+    <string name="menu_bluetooth">蓝牙</string>
+    <string name="menu_wifi">WIFI</string>
+    <string name="menu_search">浏览器</string>
+    <string name="menu_light">手电筒</string>
+    <string name="menu_home">主页</string>
+
+    <string name="setting_openFloatingWindow">打开悬浮窗</string>
+    <string name="setting_openScreenshot">开启截图功能</string>
+
+    <string name="msg_request_openFloatWindow">请先打开悬浮球</string>
+    <string name="dialog_request_open_floatwindow_pemission_content">检测到悬浮框权限未打开，请打开悬浮框权限，否则该app将无法正常运行</string>
+    <string name="dialog_request_open_floatwindow_permission_title">悬浮球</string>
+    <string name="msg_open">打开</string>
+    <string name="msg_close">关闭</string>
+    <string name="msg_open_screenshot_fail">截图功能打开失败！请重新尝试！</string>
+    <string name="msg_not_support_flashlight">你的手机不支持闪光灯功能！</string>
+    <string name="msg_without_camera_permission">没有赋予相机权限，请打开相机权限后再重试此功能！</string>
+    <string name="msg_without_write_file_permission">没有赋予读写文件权限，请打开此权限再重试此功能！</string>
+    <string name="msg_version_too_old">您的版本过低，无法使用截图功能</string>
+    <string name="msg_unsupport_blt">您的手机不支持蓝牙设备！</string>
+    <string name="msg_reOpen_screenshot">请重新开启截图功能！</string>
+    <string name="msg_screenshot_success">截图成功！图片保存在</string>
+    <string name="msg_screenshot_fail">截图失败！请检查文件权限是否开启后重新打开截图功能尝试！</string>
+
+</resources>

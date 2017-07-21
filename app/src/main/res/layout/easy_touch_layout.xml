@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bg_view"
+        android:background="@android:color/transparent"/>
+
+    <RelativeLayout
+        android:layout_width="270dp"
+        android:layout_height="270dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/item_group">
+        <LinearLayout
+            style="@style/menu_layout"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/ll_tel">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnTel"
+                android:background="@drawable/menu_tel"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_tel"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_message"
+            style="@style/menu_layout"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnMessage"
+                android:background="@drawable/menu_message" />
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_message"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_camera"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnCamera"
+                android:background="@drawable/menu_camera"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_camera"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_screenshot"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/btnScreenShot"
+                style="@style/menu_imageView"
+                android:background="@drawable/menu_cut_enable" />
+
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_screenshot"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_blt"
+            android:layout_centerInParent="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnBluetooth"
+                android:background="@drawable/menu_blutooth_off"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_bluetooth"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_wifi"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnWIFI"
+                android:background="@drawable/menu_wifi_off"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_wifi"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_browser"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnSearch"
+                android:background="@drawable/menu_browser"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_search"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_light"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnLight"
+                android:background="@drawable/menu_flashlight_off"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_light"/>
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/menu_layout"
+            android:id="@+id/ll_home"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true">
+            <ImageView
+                style="@style/menu_imageView"
+                android:id="@+id/btnHome"
+                android:background="@drawable/menu_home"/>
+            <TextView
+                style="@style/menu_textview"
+                android:text="@string/menu_home"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
