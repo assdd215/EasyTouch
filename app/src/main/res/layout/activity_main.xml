@@ -7,6 +7,24 @@
     android:background="@color/colorCommonBackground"
     tools:context="com.example.aria.easytouch.activity.MainActivity">
 
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorToolbarColor"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="0dp">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:background="@color/colorToolbarColor"
+            android:id="@+id/toolbar"
+            app:title="Home"
+            app:titleTextColor="@android:color/white" />
+    </android.support.v7.widget.CardView>
+
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,9 +34,16 @@
         android:textColor="@color/colorTitle"
         android:layout_centerHorizontal="true"
         android:gravity="center"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/titleMarginTop"/>
 
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/center_stub"
+        android:layout_centerInParent="true"/>
 
     <LinearLayout
         android:layout_centerVertical="true"
@@ -27,7 +52,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@android:color/transparent"
-        android:layout_marginTop="30dp">
+        android:layout_below="@+id/center_stub">
 
             <RelativeLayout
                 android:layout_width="match_parent"

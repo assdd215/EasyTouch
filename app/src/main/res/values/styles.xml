@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="SettingActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SettingActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">#464545</item>
         <item name="colorPrimary">#797878</item>
         <item name="colorAccent">#728e43</item>

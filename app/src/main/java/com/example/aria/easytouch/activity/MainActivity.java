@@ -14,6 +14,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
@@ -43,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     ShSwitchView switchView;
     @BindView(R.id.screenShotSwitch)
     ShSwitchView screenShotView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +66,25 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         EasyTouchApplication application = (EasyTouchApplication) getApplication();
         if (application.getOpenFloatingWindow())switchView.setOn(true);
         if (application.getOpenScreenShot())screenShotView.setOn(true);
+        initToolbar();
+
+    }
+
+    private void initToolbar(){
+//        toolbar.setTitle("Home");
+        toolbar.inflateMenu(R.menu.setting_menu);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_commend:
+                        Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     private void initListener(){

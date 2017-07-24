@@ -32,5 +32,9 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     compile 'pub.devrel:easypermissions:0.4.2'
     compile 'com.7heaven.ioswidget:iosswitch:0.6'
+    // Required for Flurry Analytics integration
+    compile 'com.flurry.android:analytics:7.0.0@aar'
+    // Optional - If you want to use the Ads SDK
+    compile 'com.flurry.android:ads:7.0.0@aar'
 
 }
