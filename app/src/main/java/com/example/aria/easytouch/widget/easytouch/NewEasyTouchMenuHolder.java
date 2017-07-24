@@ -8,23 +8,35 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.media.Image;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.os.Environment;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.os.AsyncTaskCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
+import com.example.aria.easytouch.widget.easytouch.screenshot.OldScreenShotUtilImpl;
+import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.camera.Camera2Impl;
 import com.example.aria.easytouch.widget.easytouch.camera.CameraImpl;
 import com.example.aria.easytouch.widget.easytouch.camera.LightCamera;
 import com.example.aria.easytouch.widget.easytouch.menu.MainView;
+import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
+import com.example.aria.easytouch.widget.easytouch.screenshot.SaveTask;
+import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
+import com.example.aria.easytouch.widget.easytouch.screenshot.ScreenShotUtil;
+
+import java.io.File;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -36,6 +48,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private Context context;
     private MainView mainView;
     private OnMenuHolderEventListener onMenuHolderEventListener;
+    private OnScreenshotEventListener onScreenshotEventListener;
     private LightCamera cameraUtil;
     private ScreenShotUtil screenShotUtil;
 
@@ -88,15 +101,14 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         else cameraUtil = new CameraImpl(context);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            screenShotUtil = new ScreenShotUtil(context);
-
+            screenShotUtil = new NewScreenShotUtilImpl(context);
+        else screenShotUtil = OldScreenShotUtilImpl.getInstance(context);
     }
 
     private void initMenuItems(){
         mainView.addMenuItem(context.getString(R.string.menu_tel), context.getResources().getDrawable(R.drawable.menu_tel), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("MainActivity","btnTel click");
                 onMenuHolderEventListener.beforeItemPerform(v);
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL);
                 dialIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
@@ -124,7 +136,8 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
                 if (EasyPermissions.hasPermissions(context, Manifest.permission.CAMERA)){
-                    Intent cameraIntent = new Intent("android.media.action.IMAGE_CAPTURE");
+                    Intent cameraIntent = new Intent();
+                    cameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                     cameraIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
                     context.startActivity(cameraIntent);
                 }else {
@@ -137,20 +150,13 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("MainActivity","btnScreenshot Click");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                    if (ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                        Toast.makeText(context,context.getResources().getString(R.string.msg_without_write_file_permission),Toast.LENGTH_SHORT).show();
-                        onMenuHolderEventListener.afterItemClick(v);
-                        return;
-                    }
-                    onMenuHolderEventListener.beforeItemPerform(v);
-                    screenShotUtil.startScreenShot();
-                }
-                else {
-                    Toast.makeText(context,context.getResources().getString(R.string.msg_version_too_old),Toast.LENGTH_SHORT).show();
+                if (ContextCompat.checkSelfPermission(context,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                    Toast.makeText(context,context.getResources().getString(R.string.msg_without_write_file_permission),Toast.LENGTH_SHORT).show();
                     onMenuHolderEventListener.afterItemClick(v);
+                    return;
                 }
+                onMenuHolderEventListener.beforeItemPerform(v);
+                screenShotUtil.startScreenshot();
             }
         });
 
@@ -158,17 +164,15 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             @Override
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
-                    BluetoothAdapter adapter =  ((BluetoothManager)context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
-                    if (adapter == null){
-                        Toast.makeText(context,context.getString(R.string.msg_unsupport_blt),Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (adapter.isEnabled()){
-                        adapter.disable();
-                    }else {
-                        adapter.enable();
-                    }
+                BluetoothAdapter bluetoothAdapter = getBltAdapter();
+                if (bluetoothAdapter == null){
+                    Toast.makeText(context,context.getString(R.string.msg_unsupport_blt),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (bluetoothAdapter.isEnabled()){
+                    bluetoothAdapter.disable();
+                }else {
+                    bluetoothAdapter.enable();
                 }
                 onMenuHolderEventListener.afterItemClick(v);
             }
@@ -192,7 +196,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             @Override
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
-                Log.d("MainActivity","btnSearch click");
                 Intent browserIntent = new Intent();
                 browserIntent.setAction("android.intent.action.VIEW");
                 Uri url = Uri.parse("http://www.baidu.com");
@@ -207,7 +210,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             @Override
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
-                Log.d("MainActivity","btnLight click");
                 if (ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
                     Toast.makeText(context,context.getString(R.string.msg_without_camera_permission),Toast.LENGTH_SHORT).show();
                 }else cameraUtil.turnOnLight();
@@ -224,7 +226,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             @Override
             public void onClick(View v) {
                 onMenuHolderEventListener.beforeItemPerform(v);
-                Log.d("MainActivity","btnHome click");
                 Intent homeIntent = new Intent(Intent.ACTION_MAIN);
                 homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 homeIntent.addCategory(Intent.CATEGORY_HOME);
@@ -240,19 +241,17 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         customFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         customFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         customFilter.addAction(Constants.ACTIVATE_SCREENSHOT);
+//        customFilter.addAction();
         context.registerReceiver(customReceiver,customFilter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setOnScreenshotEventListener(ScreenShotUtil.OnScreenshotEventListener onScreenshotEventListener){
+    public void setOnScreenshotEventListener(OnScreenshotEventListener onScreenshotEventListener){
         screenShotUtil.setOnScreenshotEventListener(onScreenshotEventListener);
     }
 
     public void onDestory(){
         context.unregisterReceiver(customReceiver);
     }
-
-
 
     public void updateMenuIcons(){
         //检测wifi
@@ -265,16 +264,14 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                     getImageView().setImageResource(R.drawable.menu_wifi_off);
         }
         //检测蓝牙
-        BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
-            if (bluetoothManager.getAdapter() == null)return;
-            if (bluetoothManager.getAdapter().isEnabled()){
-                mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
-                        getImageView().setImageResource(R.drawable.menu_blutooth_on);
-            }else {
-                mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
-                        getImageView().setImageResource(R.drawable.menu_blutooth_off);
-            }
+        BluetoothAdapter bluetoothAdapter = getBltAdapter();
+        if (bluetoothAdapter == null)return;
+        if (bluetoothAdapter.isEnabled()){
+            mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
+                    getImageView().setImageResource(R.drawable.menu_blutooth_on);
+        }else {
+            mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
+                    getImageView().setImageResource(R.drawable.menu_blutooth_off);
         }
 
         //检测手电筒
@@ -285,6 +282,16 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         getImageView().setImageResource(R.drawable.menu_flashlight_off);
 
 
+    }
+
+    private BluetoothAdapter getBltAdapter(){
+        BluetoothAdapter bluetoothAdapter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2){
+            BluetoothManager bluetoothManager = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+            bluetoothAdapter =bluetoothManager.getAdapter();
+        }else
+            bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return bluetoothAdapter;
     }
 
     public View getMainView() {
@@ -305,4 +312,5 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     public void afterItemClick(View view) {
 
     }
+
 }

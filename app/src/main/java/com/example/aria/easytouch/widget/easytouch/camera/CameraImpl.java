@@ -35,6 +35,11 @@ public class CameraImpl implements LightCamera{
     }
 
     @Override
+    public void setOpenCamera(boolean isOpen) {
+        this.isOpenCamera = isOpen;
+    }
+
+    @Override
     public void turnOnLight() {
 
         if (!isSupportFlash()){
@@ -44,12 +49,10 @@ public class CameraImpl implements LightCamera{
 
         if (isOpenCamera) {
             isOpenCamera = false;
-            Log.d("MainActivity","openCamera");
-                turnOnCamera(camera);
+            turnOffCamera(camera);
         }else {
             isOpenCamera = true;
-            Log.d("MainActivity","closeCamera");
-                turnOffCamera(camera);
+            turnOnCamera(camera);
         }
     }
 
@@ -101,7 +104,7 @@ public class CameraImpl implements LightCamera{
         FeatureInfo[] featureInfos = manager.getSystemAvailableFeatures();
         for (FeatureInfo info: featureInfos){
             if (PackageManager.FEATURE_CAMERA_FLASH.equals(info.name))
-                flag = true;
+                return true;
             else flag = false;
         }
         return flag;

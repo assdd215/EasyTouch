@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -36,5 +36,5 @@ dependencies {
     compile 'com.flurry.android:analytics:7.0.0@aar'
     // Optional - If you want to use the Ads SDK
     compile 'com.flurry.android:ads:7.0.0@aar'
-
+    compile files('libs/AndroidScreenCap.jar')
 }

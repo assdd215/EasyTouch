@@ -28,6 +28,7 @@
     <string name="msg_version_too_old">The version of your smartphone is too low to use the screenshot function!</string>
     <string name="msg_unsupport_blt">Your smart phone does not support Bluetooth devices!</string>
     <string name="msg_reOpen_screenshot">Please re-open the screenshot function!</string>
+    <string name="msg_without_root_screenshot">You do not have the ROOT!Please open the ROOT and try screenshot function again!</string>
     <string name="msg_screenshot_success">Screenshot sucess!Picture saved in </string>
     <string name="msg_screenshot_fail">Screenshot failed! Please check whether the file permissions are turned on and re-open the screenshot function to try again!</string>
 </resources>

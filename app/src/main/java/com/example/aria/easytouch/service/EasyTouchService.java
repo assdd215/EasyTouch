@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.media.Image;
 import android.os.AsyncTask;
@@ -28,7 +29,8 @@ import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
-import com.example.aria.easytouch.widget.easytouch.ScreenShotUtil;
+import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
+import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
 
 /**
  * Created by Aria on 2017/7/17.
@@ -73,11 +75,14 @@ public class EasyTouchService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
+
+
+
         initData();
         initReceiver();
         setForeground();
-        myAsyncTask = new MyAsyncTask();
-        myAsyncTask.execute();
+//        myAsyncTask = new MyAsyncTask();
+//        myAsyncTask.execute();
 
     }
 
@@ -89,6 +94,10 @@ public class EasyTouchService extends Service{
         windowLayoutParams.format = PixelFormat.RGBA_8888;
         windowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
 
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(Constants.STATE_FLOATWINDOW,true);
+        editor.apply();
         addIconView();
     }
 
@@ -151,7 +160,6 @@ public class EasyTouchService extends Service{
         windowLayoutParams.y = iconViewY;
         DisplayMetrics metrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(metrics);
-        Log.d("MainActivity","dpi:"+metrics.density);
         windowLayoutParams.width = Utils.dip2px(getApplicationContext(),ICON_SIZE);
         windowLayoutParams.height = Utils.dip2px(getApplicationContext(),ICON_SIZE);
         windowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
@@ -167,8 +175,7 @@ public class EasyTouchService extends Service{
             newEasyTouchMenuHolder = null;
             newEasyTouchMenuHolder = new NewEasyTouchMenuHolder(getApplicationContext());
             newEasyTouchMenuHolder.setOnMenuHolderEventListener(new MenuHolderEventListener(newEasyTouchMenuHolder));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            newEasyTouchMenuHolder.setOnScreenshotEventListener(new ScreenShotUtil.OnScreenshotEventListener() {
+            newEasyTouchMenuHolder.setOnScreenshotEventListener(new OnScreenshotEventListener() {
                 @Override
                 public void beforeScreenshot() {
 
@@ -190,7 +197,6 @@ public class EasyTouchService extends Service{
 
                 }
             });
-
         }
 
         windowLayoutParams.alpha = 1f;
@@ -230,6 +236,11 @@ public class EasyTouchService extends Service{
         myAsyncTask.cancel(true);
         if (mConnection != null)
             unbindService(mConnection);
+
+        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE).edit();
+        editor.putBoolean(Constants.STATE_FLOATWINDOW,false);
+        editor.putBoolean(Constants.STATE_SCREENSHOT,false);
+        editor.apply();
     }
 
     private class MyAsyncTask extends AsyncTask{
@@ -321,7 +332,6 @@ public class EasyTouchService extends Service{
         @Override
         public void afterItemClick(View view) {
             this.onMenuHolderEventListener.afterItemClick(view);
-            Log.d("MainActivity","view.getId:"+view.getId());
             addIconView();
         }
     }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
@@ -16,15 +17,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
-import com.example.aria.easytouch.base.EasyTouchApplication;
 import com.example.aria.easytouch.service.EasyTouchService;
 import com.example.aria.easytouch.util.Constants;
-import com.example.aria.easytouch.widget.easytouch.ScreenShotUtil;
+import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
 import java.util.List;
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setTitle("HOME");
         initView();
         initListener();
 
@@ -63,28 +62,36 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     private void initView(){
-        EasyTouchApplication application = (EasyTouchApplication) getApplication();
-        if (application.getOpenFloatingWindow())switchView.setOn(true);
-        if (application.getOpenScreenShot())screenShotView.setOn(true);
+
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
+        boolean stateFloatWindow = sharedPreferences.getBoolean(Constants.STATE_FLOATWINDOW,false);
+        boolean stateScreenshot = sharedPreferences.getBoolean(Constants.STATE_SCREENSHOT,false);
+
+        if (stateFloatWindow)switchView.setOn(true);
+        if (stateScreenshot)screenShotView.setOn(true);
         initToolbar();
 
     }
 
-    private void initToolbar(){
-//        toolbar.setTitle("Home");
-        toolbar.inflateMenu(R.menu.setting_menu);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.setting_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.menu_commend:
-                        Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
-                        break;
-                }
-                return false;
-            }
-        });
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_commend:
+                Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void initToolbar(){
+        setSupportActionBar(toolbar);
     }
 
     private void initListener(){
@@ -107,10 +114,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Intent intent = new Intent();
                     intent.setAction(Constants.STOP_SERVICE);
                     sendBroadcast(intent);
-                    ((EasyTouchApplication)getApplication()).setOpenFloatingWindow(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        ScreenShotUtil.setData(null);
-                    ((EasyTouchApplication)getApplication()).setOpenScreenShot(false);
+                        NewScreenShotUtilImpl.setData(null);
                     screenShotView.post(new Runnable() {
                         @Override
                         public void run() {
@@ -126,8 +131,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             @Override
             public void onSwitchStateChange(boolean isOn) {
                 if (isOn){
-                    if (!((EasyTouchApplication)getApplication()).getOpenFloatingWindow()){
-                        ((EasyTouchApplication)getApplication()).setOpenScreenShot(false);
+                    SharedPreferences preferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
+                    boolean stateFloatWindow = preferences.getBoolean(Constants.STATE_FLOATWINDOW,false);
+                    if (!stateFloatWindow){
                         Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_request_openFloatWindow),Toast.LENGTH_SHORT).show();
                         screenShotView.post(new Runnable() {
                             @Override
@@ -136,18 +142,20 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                             }
                         });
                     } else {
-                        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
-                            if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                                ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                        REQUEST_WRITE_WRITE_EXTERNAL_STORAGE);
-                            }
+                        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+                            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    REQUEST_WRITE_WRITE_EXTERNAL_STORAGE);
                         }
                         requestCapturePermission();
                     }
 
                 }else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        ScreenShotUtil.setData(null);
+                        NewScreenShotUtilImpl.setData(null);
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(Constants.STATE_SCREENSHOT,false);
+                    editor.apply();
                 }
             }
         });
@@ -166,7 +174,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 //开启悬浮球
                 Intent intent = new Intent(MainActivity.this, EasyTouchService.class);
                 startService(intent);
-                ((EasyTouchApplication)getApplication()).setOpenFloatingWindow(true);
 
     }
 
@@ -176,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 showAppSettingDialog();
                 return false;
             }
+        }else if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED){
+            showAppSettingDialog();
+            return false;
+        }else {
+            Log.d("MainActivity","Permission:"+(ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED));
         }
         return true;
     }
@@ -225,8 +237,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             case REQUEST_PROJECTION_CODE:
                 if (resultCode == RESULT_OK && data != null){
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                        ScreenShotUtil.setData(data);
-                        ((EasyTouchApplication)getApplication()).setOpenScreenShot(true);
+                        NewScreenShotUtilImpl.setData(data);
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(Constants.STATE_SCREENSHOT,true);
+                        editor.apply();
                     }
                     else {
                         Toast.makeText(this,getResources().getString(R.string.msg_open_screenshot_fail),Toast.LENGTH_SHORT).show();
@@ -241,4 +256,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 break;
         }
     }
+
+
 }

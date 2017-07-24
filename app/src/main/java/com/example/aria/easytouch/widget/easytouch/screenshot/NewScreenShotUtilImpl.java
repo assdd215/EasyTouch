@@ -1,4 +1,4 @@
-package com.example.aria.easytouch.widget.easytouch;
+package com.example.aria.easytouch.widget.easytouch.screenshot;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.util.Utils;
+import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +34,7 @@ import java.io.IOException;
  */
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class ScreenShotUtil {
+public class NewScreenShotUtilImpl implements ScreenShotUtil{
 
     private Context context;
     private MediaProjection mediaProjection;
@@ -48,7 +49,7 @@ public class ScreenShotUtil {
 
     private OnScreenshotEventListener onScreenshotEventListener;
 
-    public ScreenShotUtil(Context context){
+    public NewScreenShotUtilImpl(Context context){
         this.context = context;
         initData();
     }
@@ -87,20 +88,6 @@ public class ScreenShotUtil {
         imageReader = ImageReader.newInstance(screenWidth,screenHeight, PixelFormat.RGBA_8888,1);
     }
 
-
-    public void startScreenShot(){
-        onScreenshotEventListener.beforeScreenshot();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (startVirtual()) startCapture();
-                onScreenshotEventListener.afterScreenshot();
-            }
-        },10);
-
-    }
-
     private boolean startVirtual(){
         if (data == null){
             Toast.makeText(context,context.getResources().getString(R.string.msg_reOpen_screenshot),Toast.LENGTH_SHORT).show();
@@ -121,10 +108,11 @@ public class ScreenShotUtil {
         if (image == null && data!=null){
             Log.d("MainActivity","startCapture");
             if (data == null)return;
-            startScreenShot();
+            startScreenshot();
         }else {
-            SaveTask saveTask = new SaveTask();
-            AsyncTaskCompat.executeParallel(saveTask,image);
+            Bitmap bitmap = Utils.image2Bitmap(image);
+            SaveTask saveTask = new SaveTask(context,onScreenshotEventListener);
+            AsyncTaskCompat.executeParallel(saveTask,bitmap);
             onScreenshotEventListener.onImageCaptured(image);
         }
     }
@@ -133,56 +121,23 @@ public class ScreenShotUtil {
         data = data1;
     }
 
+
+    @Override
     public void setOnScreenshotEventListener(OnScreenshotEventListener onScreenshotEventListener) {
         this.onScreenshotEventListener = onScreenshotEventListener;
     }
 
-    private class SaveTask extends AsyncTask<Image,Void,Boolean>{
-
-        @Override
-        protected Boolean doInBackground(Image... params) {
-            if (params == null || params.length < 1 || params[0] == null) return false;
-
-            Image image = params[0];
-            Bitmap bitmap = Utils.image2Bitmap(image);
-            File fileImage = null;
-            if (bitmap != null) {
-                try {
-                    fileImage = new File(FileUtil.getScreenShotsName(context));
-                    if (!fileImage.getParentFile().exists())fileImage.getParentFile().mkdirs();
-                    if (!fileImage.exists())fileImage.createNewFile();
-                    FileOutputStream outputStream = new FileOutputStream(fileImage);
-                    bitmap.compress(Bitmap.CompressFormat.PNG,100,outputStream);
-                    outputStream.flush();
-                    outputStream.close();
-                    return true;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    @Override
+    public void startScreenshot() {
+        onScreenshotEventListener.beforeScreenshot();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (startVirtual()) startCapture();
+                onScreenshotEventListener.afterScreenshot();
             }
-                return false;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            if (aBoolean){
-                Toast.makeText(context,context.getString(R.string.msg_screenshot_success) +FileUtil.getAppPath(context)+File.separator+FileUtil.SCREENCAPTURE_PATH,Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(context,context.getString(R.string.msg_screenshot_fail),Toast.LENGTH_SHORT).show();
-            }
-
-            onScreenshotEventListener.onPostImageSaved(aBoolean);
-        }
-    }
-
-
-    public interface OnScreenshotEventListener {
-        void beforeScreenshot();
-        void onImageCaptured(Image image);
-        void afterScreenshot();
-        void onPostImageSaved(boolean succeed);
+        },10);
     }
 
 

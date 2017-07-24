@@ -23,9 +23,6 @@ public class EasyTouchApplication extends Application{
 
     private static final String FLURRY_API_KEY = "GPXPBBQKSHPM6WWTN88S";
 
-    private boolean openFloatingWindow;
-    private boolean openScreenShot;
-
     private FlurryAgentListener flurryAgentListener;
 
     @Override
@@ -34,9 +31,7 @@ public class EasyTouchApplication extends Application{
         initFlurry();
     }
 
-    public void setOpenFloatingWindow(boolean openFloatingWindow) {
-        this.openFloatingWindow = openFloatingWindow;
-    }
+
 
     private void initFlurry(){
 
@@ -57,15 +52,5 @@ public class EasyTouchApplication extends Application{
                 .build(this, FLURRY_API_KEY);
     }
 
-    public void setOpenScreenShot(boolean openScreenShot) {
-        this.openScreenShot = openScreenShot;
-    }
 
-    public boolean getOpenFloatingWindow(){
-        return openFloatingWindow;
-    }
-
-    public boolean getOpenScreenShot(){
-        return openScreenShot;
-    }
 }

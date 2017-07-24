@@ -29,6 +29,7 @@
     <string name="msg_version_too_old">您的版本过低，无法使用截图功能</string>
     <string name="msg_unsupport_blt">您的手机不支持蓝牙设备！</string>
     <string name="msg_reOpen_screenshot">请重新开启截图功能！</string>
+    <string name="msg_without_root_screenshot">检测到不具备ROOT权限！请开启ROOT权限后再使用截图功能！</string>
     <string name="msg_screenshot_success">截图成功！图片保存在</string>
     <string name="msg_screenshot_fail">截图失败！请检查文件权限是否开启后重新打开截图功能尝试！</string>
 

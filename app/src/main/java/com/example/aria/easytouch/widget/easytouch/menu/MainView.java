@@ -112,11 +112,12 @@ public class MainView {
     }
 
     private void setItemPosition(RelativeLayout.LayoutParams params, int position){
+        Log.d("MainActivity","position:"+position);
         switch (position){
             case 0:
                 params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                params.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_START);
                 break;
             case 1:
                 params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -125,11 +126,11 @@ public class MainView {
             case 2:
                 params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                params.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_END);
                 break;
             case 3:
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
-                params.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_START);
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 break;
             case 4:
@@ -137,12 +138,12 @@ public class MainView {
                 break;
             case 5:
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
-                params.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_END);
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 break;
             case 6:
                 params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                params.addRule(RelativeLayout.ALIGN_PARENT_START);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_START);
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 break;
             case 7:
@@ -151,7 +152,7 @@ public class MainView {
                 break;
             case 8:
                 params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                params.addRule(RelativeLayout.ALIGN_PARENT_END);
+//                params.addRule(RelativeLayout.ALIGN_PARENT_END);
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 break;
         }

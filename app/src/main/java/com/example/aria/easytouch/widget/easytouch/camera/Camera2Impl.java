@@ -192,4 +192,9 @@ public class Camera2Impl implements LightCamera{
         return isOpenCamera;
     }
 
+    @Override
+    public void setOpenCamera(boolean isOpen) {
+        this.isOpenCamera = isOpen;
+    }
+
 }
