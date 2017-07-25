@@ -9,4 +9,6 @@
     <color name="colorTitle">#dcddcf</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#728e43</color>
+
+    <color name="colorSettingItemColor">#817b7b</color>
 </resources>

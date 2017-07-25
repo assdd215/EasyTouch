@@ -29,7 +29,6 @@ import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
-import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
 
 /**
@@ -39,6 +38,7 @@ import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventL
 public class EasyTouchService extends Service{
 
     private static final String TAG = "EasyTouchService";
+
 
     private final int FORESERVICCE_PID = android.os.Process.myPid();
     private AssistServiceConnection mConnection;
@@ -76,13 +76,10 @@ public class EasyTouchService extends Service{
     public void onCreate() {
         super.onCreate();
 
-
-
         initData();
         initReceiver();
         setForeground();
-//        myAsyncTask = new MyAsyncTask();
-//        myAsyncTask.execute();
+//        new MyAsyncTask().execute();
 
     }
 
@@ -158,12 +155,44 @@ public class EasyTouchService extends Service{
         }
         windowLayoutParams.x = iconViewX;
         windowLayoutParams.y = iconViewY;
+        windowLayoutParams.windowAnimations=R.style.IconViewAnimator;
         DisplayMetrics metrics = new DisplayMetrics();
         windowManager.getDefaultDisplay().getMetrics(metrics);
+        windowLayoutParams.alpha = 0.6f;
         windowLayoutParams.width = Utils.dip2px(getApplicationContext(),ICON_SIZE);
         windowLayoutParams.height = Utils.dip2px(getApplicationContext(),ICON_SIZE);
         windowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         windowManager.addView(iconView,windowLayoutParams);
+
+//        iconView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.d("MainActivity","run");
+//                Animation alphaAnimation = new AlphaAnimation(-1,1);
+//                alphaAnimation.setDuration(1500);
+//                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+//                    @Override
+//                    public void onAnimationStart(Animation animation) {
+//                        Log.d("MainActivity","anim start");
+//                    }
+//
+//                    @Override
+//                    public void onAnimationEnd(Animation animation) {
+//                        Log.d("MainActivity","anim end");
+//                        iconView.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    @Override
+//                    public void onAnimationRepeat(Animation animation) {
+//
+//                    }
+//                });
+//                iconView.startAnimation(alphaAnimation);
+//
+//            }
+//        });
+
+
     }
 
     private void addMenuView(){
@@ -171,6 +200,7 @@ public class EasyTouchService extends Service{
         if (newEasyTouchMenuHolder == null || newEasyTouchMenuHolder.getMainView() == null ){
             if (newEasyTouchMenuHolder != null){
                 //TODO 一些销毁操作
+                newEasyTouchMenuHolder.onDestory();
             }
             newEasyTouchMenuHolder = null;
             newEasyTouchMenuHolder = new NewEasyTouchMenuHolder(getApplicationContext());
@@ -208,6 +238,17 @@ public class EasyTouchService extends Service{
 
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d("MainActivity","service onUnbind");
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onStart(Intent intent, int startId) {
+        Log.d("MainActvitity","onStart");
+        super.onStart(intent, startId);
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -233,7 +274,7 @@ public class EasyTouchService extends Service{
 
         }
         stop = true;
-        myAsyncTask.cancel(true);
+//        myAsyncTask.cancel(true);
         if (mConnection != null)
             unbindService(mConnection);
 
@@ -248,15 +289,19 @@ public class EasyTouchService extends Service{
         @Override
         protected Object doInBackground(Object[] params) {
 
-            while (!stop){
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Log.d("MainActivity","run");
+//                    Intent intent1 = new Intent();
+//                    intent1.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+//                    intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+//                    startActivity(intent1);
+//                }
+//            },2000);
 
-                Log.d("Counting","state:");
-            }
+//            handler.sendEmptyMessageDelayed(Constants.CODE_TURNTO_CAMERA,5000);
             return null;
         }
     }

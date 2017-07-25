@@ -1,9 +1,11 @@
 package com.example.aria.easytouch.util;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.media.Image;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -47,60 +49,27 @@ public class Utils {
         return null;
     }
 
-    public static Bitmap acquireScreenshot(Context context){
-        WindowManager mWinManager = (WindowManager) context
-                .getSystemService(Context.WINDOW_SERVICE);
-        DisplayMetrics metrics = new DisplayMetrics();
-        Display display = mWinManager.getDefaultDisplay();
-        display.getMetrics(metrics);
-        // 屏幕高
-        int height = metrics.heightPixels;
-        // 屏幕的宽
-        int width = metrics.widthPixels;
-
-        int pixelformat = display.getPixelFormat();
-        PixelFormat localPixelFormat1 = new PixelFormat();
-        PixelFormat.getPixelFormatInfo(pixelformat, localPixelFormat1);
-        // 位深
-        int deepth = localPixelFormat1.bytesPerPixel;
-
-        byte[] arrayOfByte = new byte[height * width * deepth];
-        try {
-            // 读取设备缓存，获取屏幕图像流
-            InputStream localInputStream = readAsRoot();
-            Log.d("MainActivity","after readAsRoot:"+(localInputStream == null));
-            DataInputStream localDataInputStream = new DataInputStream(localInputStream);
-            Log.d("MainActivity","DataInputStream:"+(localDataInputStream == null));
-            Log.d("MainActivity","size of byte:" + arrayOfByte.length);
-
-            localDataInputStream.readFully(arrayOfByte);
-            localInputStream.close();
-
-            int[] tmpColor = new int[width * height];
-            int r, g, b;
-            for (int j = 0; j < width * height * deepth; j += deepth) {
-                b = arrayOfByte[j] & 0xff;
-                g = arrayOfByte[j + 1] & 0xff;
-                r = arrayOfByte[j + 2] & 0xff;
-                tmpColor[j / deepth] = (r << 16) | (g << 8) | b | (0xff000000);
-            }
-            // 构建bitmap
-            Bitmap scrBitmap = Bitmap.createBitmap(tmpColor, width, height,
-                    Bitmap.Config.ARGB_8888);
-            return scrBitmap;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-
+    public static void createDialog(Context context, String title, String message, String positive, DialogInterface.OnClickListener posiviteListener,
+                                    String negative, DialogInterface.OnClickListener negativeListener){
+        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(title)
+                                .setMessage(message)
+                                .setPositiveButton(positive,posiviteListener)
+                                .setNegativeButton(negative,negativeListener)
+                                .create();
+        dialog.show();
     }
 
-    private static InputStream readAsRoot()throws Exception{
-        File deviceFile = new File("/dev/graphics/fb0");
-        Process localProcess = Runtime.getRuntime().exec("su");
-        String str = "cat " + deviceFile.getAbsolutePath() + "\n";
-        localProcess.getOutputStream().write(str.getBytes());
-        return localProcess.getInputStream();
+    public static void createDialog(Context context, String title, String message, String positive, DialogInterface.OnClickListener posiviteListener){
+
+        String negative = context.getString(R.string.msg_close);
+        DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        };
+
+        createDialog(context,title,message,positive,posiviteListener,negative,negativeListener);
     }
 }

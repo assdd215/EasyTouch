@@ -23,7 +23,9 @@ import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.service.EasyTouchService;
+import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
+import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         initView();
         initListener();
 
-
+        firstStart();
     }
 
     private void initView(){
@@ -86,12 +88,19 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
                 break;
 
+            case R.id.menu_settings:
+                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                startActivity(intent);
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void initToolbar(){
+        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_more));
         setSupportActionBar(toolbar);
+
     }
 
     private void initListener(){
@@ -199,6 +208,25 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
             return true;
         }
         return false;
+    }
+
+    private void firstStart(){
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARE_DATA,Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(Constants.FIRST_START,true)){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.FIRST_START,false);
+            editor.apply();
+            Utils.createDialog(this, getString(R.string.dialog_first_start_app_titile), getString(R.string.dialog_first_start_app_content),
+                    getString(R.string.msg_open), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                            startActivity(intent);
+                            dialog.cancel();
+                            dialog.dismiss();
+                        }
+                    });
+        }
     }
 
     private void showAppSettingDialog(){

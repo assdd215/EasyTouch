@@ -1,10 +1,13 @@
 package com.example.aria.easytouch.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -12,8 +15,10 @@ import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.example.aria.easytouch.R;
+import com.example.aria.easytouch.service.MyService;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
 
@@ -41,34 +46,22 @@ public class PreScreenshotActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_screenshot);
         ButterKnife.bind(this);
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
     }
 
     @OnClick({R.id.btnScreenshot})
     void onClick(View view){
-        new ScreenshotTask().execute();
+        Log.d("MainActivity","view:"+view.getId());
+        Intent intent = new Intent(PreScreenshotActivity.this, MyService.class);
+        startService(intent);
+        Log.d("MainActivity","after startService");
+
     }
 
-    private class ScreenshotTask extends AsyncTask{
 
-        private Bitmap bitmap;
-
-        @Override
-        protected Object doInBackground(Object[] params) {
-            Log.d("MainActivity","doInBackground");
-            bitmap = Utils.acquireScreenshot(PreScreenshotActivity.this);
-            Log.d("MainActivity","return");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Object o) {
-            super.onPostExecute(o);
-            Log.d("MainActivity","onPostExecute");
-            if (bitmap == null)
-                Log.d("MainActivity","bitmap is null");
-            imageView.setImageBitmap(bitmap);
-        }
-    }
 
 }

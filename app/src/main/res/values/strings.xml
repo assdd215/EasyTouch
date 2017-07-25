@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EasyTouch</string>
-    
-    
+
+
     <string name="menu_tel">Tel</string>
     <string name="menu_message">SMS</string>
     <string name="menu_camera">Camera</string>
@@ -15,14 +15,19 @@
 
     <string name="setting_openFloatingWindow">Open FloatingWindow</string>
     <string name="setting_openScreenshot">Open ScreenShot</string>
+    <string name="btn_setting">Settings</string>
 
     <string name="msg_request_openFloatWindow">Please open the floating window first!</string>
     <string name="dialog_request_open_floatwindow_pemission_content">the Display pop-up window permission is closed,please open the display pop-up window permission,otherwise the app will not function properly</string>
     <string name="dialog_request_open_floatwindow_permission_title">floating window</string>
+    <string name="dialog_first_start_app_titile">EasyTouch</string>
+    <string name="dialog_first_start_app_content">Easytouch is unstatble, do you want to fix it?</string>
+
     <string name="msg_open">open</string>
     <string name="msg_close">close</string>
     <string name="msg_open_screenshot_fail">the screenshot function failed!Please try again!</string>
     <string name="msg_not_support_flashlight">Your smart phone does not support the flash function！</string>
+    <string name="msg_flashlight_open">Note!You can not turn on the camera while using flashlight!Turn off the flashlight before attempting to turn on camera!</string>
     <string name="msg_without_camera_permission">Do not give the camera permission,please open the camera permission and then try this feature!</string>
     <string name="msg_without_write_file_permission">Do not give the read-and-write-file permission,please open the read-and-write-file permission and then try this feature!</string>
     <string name="msg_version_too_old">The version of your smartphone is too low to use the screenshot function!</string>

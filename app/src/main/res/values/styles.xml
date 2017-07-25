@@ -14,6 +14,11 @@
         <item name="colorAccent">#728e43</item>
     </style>
 
+    <style name="IconViewAnimator">
+        <item name="android:windowEnterAnimation">@anim/anim_iconview_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_iconview_exit</item>
+    </style>
+
     <style name="menu_textview">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>

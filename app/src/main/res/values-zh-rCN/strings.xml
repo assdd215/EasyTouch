@@ -24,6 +24,7 @@
     <string name="msg_close">关闭</string>
     <string name="msg_open_screenshot_fail">截图功能打开失败！请重新尝试！</string>
     <string name="msg_not_support_flashlight">你的手机不支持闪光灯功能！</string>
+    <string name="msg_flashlight_open">请注意！使用手电筒功能时无法打开相机功能！请先关闭手电筒功能后再尝试打开相机！</string>
     <string name="msg_without_camera_permission">没有赋予相机权限，请打开相机权限后再重试此功能！</string>
     <string name="msg_without_write_file_permission">没有赋予读写文件权限，请打开此权限再重试此功能！</string>
     <string name="msg_version_too_old">您的版本过低，无法使用截图功能</string>

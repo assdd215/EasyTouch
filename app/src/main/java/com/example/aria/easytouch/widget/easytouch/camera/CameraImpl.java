@@ -26,7 +26,6 @@ public class CameraImpl implements LightCamera{
 
     public CameraImpl(Context context){
         this.context = context;
-        camera = Camera.open();
     }
 
     @Override
@@ -49,14 +48,16 @@ public class CameraImpl implements LightCamera{
 
         if (isOpenCamera) {
             isOpenCamera = false;
-            turnOffCamera(camera);
+            turnOffCamera();
         }else {
             isOpenCamera = true;
-            turnOnCamera(camera);
+            turnOnCamera();
         }
     }
 
-    private void turnOnCamera(Camera camera){
+    private void turnOnCamera(){
+        if (camera != null) camera.stopPreview();
+        camera = Camera.open();
         Camera.Parameters parameters = camera.getParameters();
         if (parameters == null)return;
         List<String> flashModes = parameters.getSupportedFlashModes();
@@ -66,15 +67,22 @@ public class CameraImpl implements LightCamera{
             if (flashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)){
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
-            }else {}
+                camera.startPreview();
+                Toast.makeText(context,context.getString(R.string.msg_flashlight_open),Toast.LENGTH_SHORT).show();
+            }else {
+                camera.release();
+                camera = null;
+                isOpenCamera = false;
+                Toast.makeText(context,context.getString(R.string.msg_not_support_flashlight),Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    public void turnOffCamera(Camera mCamera) {
-        if (mCamera == null) {
+    public void turnOffCamera() {
+        if (camera == null) {
             return;
         }
-        Camera.Parameters parameters = mCamera.getParameters();
+        Camera.Parameters parameters = camera.getParameters();
         if (parameters == null) {
             return;
         }
@@ -90,7 +98,10 @@ public class CameraImpl implements LightCamera{
             // Turn off the flash
             if (flashModes.contains(Camera.Parameters.FLASH_MODE_OFF)) {
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                mCamera.setParameters(parameters);
+                camera.setParameters(parameters);
+                camera.stopPreview();
+                camera.release();
+                camera = null;
             } else {
                 Log.e(TAG, "FLASH_MODE_OFF not supported");
             }

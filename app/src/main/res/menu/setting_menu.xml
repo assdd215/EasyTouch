@@ -6,4 +6,8 @@
         android:icon="@drawable/icon_commend"
         android:title="@string/menu_commend"
         app:showAsAction="always"/>
+    <item android:id="@+id/menu_settings"
+        android:title="@string/btn_setting"
+        app:showAsAction="never"
+        android:visible="false"/>
 </menu>

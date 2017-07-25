@@ -112,7 +112,6 @@ public class MainView {
     }
 
     private void setItemPosition(RelativeLayout.LayoutParams params, int position){
-        Log.d("MainActivity","position:"+position);
         switch (position){
             case 0:
                 params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -167,11 +166,9 @@ public class MainView {
         if ("".equals(title)||"".equals(title.trim()))return null;
         for (ItemModel itemModel: itemModelList){
             if (itemModel.getItemTitle().equals(title)){
-                Log.d("MainActivity","title:"+title);
                 return itemModel;
             }
         }
-        Log.d("MainActivity","return null");
         return null;
     }
 }
