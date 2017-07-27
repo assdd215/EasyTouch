@@ -140,5 +140,10 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
         },10);
     }
 
+    @Override
+    public boolean isSupportScreenshot() {
+        return true;
+    }
+
 
 }

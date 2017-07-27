@@ -7,4 +7,5 @@ package com.example.aria.easytouch.widget.easytouch.screenshot;
 public interface ScreenShotUtil {
     void setOnScreenshotEventListener(OnScreenshotEventListener onScreenshotEventListener);
     void startScreenshot();
+    boolean isSupportScreenshot();
 }

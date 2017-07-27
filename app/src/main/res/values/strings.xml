@@ -11,6 +11,7 @@
     <string name="menu_search">Browser</string>
     <string name="menu_light">Light</string>
     <string name="menu_home">Home</string>
+    <string name="menu_boost">Boost</string>
     <string name="menu_commend">Commend</string>
 
     <string name="setting_openFloatingWindow">Open FloatingWindow</string>
@@ -36,4 +37,6 @@
     <string name="msg_without_root_screenshot">You do not have the ROOT!Please open the ROOT and try screenshot function again!</string>
     <string name="msg_screenshot_success">Screenshot sucess!Picture saved in </string>
     <string name="msg_screenshot_fail">Screenshot failed! Please check whether the file permissions are turned on and re-open the screenshot function to try again!</string>
+    <string name="msg_memory_cleared">Boost done! The system is clean!</string>
+    <string name="msg_memory_clear_with_number">Boost done! Has cleaned memory</string>
 </resources>

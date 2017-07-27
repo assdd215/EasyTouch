@@ -117,16 +117,12 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
         }
 
         if(ShellUtils.checkRootPermission()){
-            if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH){
-                Log.d("MainActivity","ShellUtils.checkRootPermission() = true");
                 ShellUtils.execCommand("/system/bin/screencap -p "+ fileFullPath,true);
-            }
             Toast.makeText(context,context.getString(R.string.msg_screenshot_success) +FileUtil.getAppPath(context)+File.separator+FileUtil.SCREENCAPTURE_PATH,Toast.LENGTH_SHORT).show();
             onScreenshotEventListener.afterScreenshot();
         }
         else {
-            Log.d("MainActivity","ShellUtils.checkRootPermission() = false");
-            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH){
+            if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
                 wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                 mDisplay = wm.getDefaultDisplay();
                 mDisplayMatrix = new Matrix();
@@ -306,6 +302,20 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
             }
         },30);
 
+    }
+
+    @Override
+    public boolean isSupportScreenshot() {
+
+        boolean flag = false;
+        if (ShellUtils.checkRootPermission()){
+            flag = true;
+        }
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
+            flag = true;
+        }
+
+        return flag;
     }
 }
 

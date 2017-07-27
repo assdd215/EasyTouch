@@ -6,22 +6,26 @@
     <string name="menu_message">短信</string>
     <string name="menu_camera">相机</string>
     <string name="menu_screenshot">截图</string>
-    <string name="menu_network">移动网络</string>
     <string name="menu_bluetooth">蓝牙</string>
     <string name="menu_wifi">WIFI</string>
     <string name="menu_search">浏览器</string>
     <string name="menu_light">手电筒</string>
     <string name="menu_home">主页</string>
+    <string name="menu_boost">一键加速</string>
     <string name="menu_commend">评论</string>
 
     <string name="setting_openFloatingWindow">打开悬浮窗</string>
     <string name="setting_openScreenshot">开启截图功能</string>
+    <string name="btn_setting">设置</string>
 
     <string name="msg_request_openFloatWindow">请先打开悬浮球</string>
     <string name="dialog_request_open_floatwindow_pemission_content">检测到悬浮框权限未打开，请打开悬浮框权限，否则该app将无法正常运行</string>
     <string name="dialog_request_open_floatwindow_permission_title">悬浮球</string>
+    <string name="dialog_first_start_app_titile">EasyTouch</string>
+    <string name="dialog_first_start_app_content">Easytouch尚不稳定，是否允许允许一些以修复?</string>
     <string name="msg_open">打开</string>
     <string name="msg_close">关闭</string>
+
     <string name="msg_open_screenshot_fail">截图功能打开失败！请重新尝试！</string>
     <string name="msg_not_support_flashlight">你的手机不支持闪光灯功能！</string>
     <string name="msg_flashlight_open">请注意！使用手电筒功能时无法打开相机功能！请先关闭手电筒功能后再尝试打开相机！</string>
@@ -33,5 +37,7 @@
     <string name="msg_without_root_screenshot">检测到不具备ROOT权限！请开启ROOT权限后再使用截图功能！</string>
     <string name="msg_screenshot_success">截图成功！图片保存在</string>
     <string name="msg_screenshot_fail">截图失败！请检查文件权限是否开启后重新打开截图功能尝试！</string>
+    <string name="msg_memory_cleared">加速完毕！已到最佳状态！</string>
+    <string name="msg_memory_clear_with_number">加速完毕！已清除内存 </string>
 
 </resources>

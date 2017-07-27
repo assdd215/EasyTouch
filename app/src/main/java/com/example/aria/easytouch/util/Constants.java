@@ -12,6 +12,6 @@ public class Constants {
     public static final String SHARE_DATA = "SHARE_DATA";
     public static final String STATE_FLOATWINDOW = "STATE_FLOATWINDOW";
     public static final String STATE_SCREENSHOT = "STATE_SCREENSHOT";
-
     public static final int CODE_TURNTO_CAMERA = 10001;
+    public static final String TOTALMEMORY = "TOTAL_MEMORY";
 }

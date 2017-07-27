@@ -2,6 +2,7 @@ package com.example.aria.easytouch.widget.easytouch.menu;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -29,6 +30,8 @@ public class MainView {
     private OnMenuHolderEventListener onMenuHolderEventListener;
     private List<ItemModel> itemModelList;
 
+    private MenuViewPager viewPager;
+    private MenuPagerAdapter menuPagerAdapter;
 
 
     public MainView(Context context){
@@ -39,6 +42,7 @@ public class MainView {
     private void initMainView() {
 
         itemModelList = new ArrayList<>(9);
+        menuPagerAdapter = new MenuPagerAdapter(context);
 
         baseLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -51,11 +55,18 @@ public class MainView {
             }
         });
 
+        viewPager = new MenuViewPager(context);
+        viewPager.setAdapter(menuPagerAdapter);
+
+
+
+
         menuLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,270),Utils.dip2px(context,270));
         menuParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         menuLayout.setLayoutParams(menuParams);
         menuLayout.setBackgroundResource(R.drawable.item_group);
+        menuLayout.addView(viewPager);
         baseLayout.addView(menuLayout);
 
     }
@@ -97,7 +108,7 @@ public class MainView {
         itemLayout.addView(iconView,itemIconParams);
         itemLayout.addView(titleView,itemTitleParams);
         setItemPosition(itemLayoutParams,itemModelList.size());
-        menuLayout.addView(itemLayout,itemLayoutParams);
+        menuPagerAdapter.addItem(itemLayout,itemLayoutParams);
 
         itemModelList.add(new ItemModel(iconView,itemLayout,itemTitle,itemModelList.size()));
         return flag;

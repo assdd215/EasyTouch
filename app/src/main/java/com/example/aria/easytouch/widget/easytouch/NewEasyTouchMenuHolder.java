@@ -19,24 +19,19 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
-import com.example.aria.easytouch.activity.MyActivity;
-import com.example.aria.easytouch.activity.PreScreenshotActivity;
 import com.example.aria.easytouch.util.Constants;
+import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
+import com.example.aria.easytouch.widget.easytouch.boost.MemoryBoostUtil;
 import com.example.aria.easytouch.widget.easytouch.screenshot.OldScreenShotUtilImpl;
-import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.camera.Camera2Impl;
 import com.example.aria.easytouch.widget.easytouch.camera.CameraImpl;
 import com.example.aria.easytouch.widget.easytouch.camera.LightCamera;
 import com.example.aria.easytouch.widget.easytouch.menu.MainView;
 import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
-import com.example.aria.easytouch.widget.easytouch.screenshot.SaveTask;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.example.aria.easytouch.widget.easytouch.screenshot.ScreenShotUtil;
 
-import java.io.File;
 import java.util.List;
-
-import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by Aria on 2017/7/21.
@@ -46,9 +41,9 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private Context context;
     private MainView mainView;
     private OnMenuHolderEventListener onMenuHolderEventListener;
-    private OnScreenshotEventListener onScreenshotEventListener;
     private LightCamera cameraUtil;
     private ScreenShotUtil screenShotUtil;
+    private BoostUtil boostUtil;
 
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override
@@ -99,6 +94,8 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             screenShotUtil = new NewScreenShotUtilImpl(context);
         else screenShotUtil = OldScreenShotUtilImpl.getInstance(context);
+
+        boostUtil = new MemoryBoostUtil(context);
     }
 
     private void initMenuItems(){
@@ -142,6 +139,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             }
         });
 
+        if (screenShotUtil.isSupportScreenshot())
         mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,6 +227,14 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 onMenuHolderEventListener.afterItemClick(v);
             }
         });
+        mainView.addMenuItem(context.getString(R.string.menu_boost), context.getResources().getDrawable(R.drawable.menu_boost), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onMenuHolderEventListener.beforeItemPerform(v);
+                boostUtil.clearMemory();
+                onMenuHolderEventListener.afterItemClick(v);
+            }
+        });
     }
 
     private void initReceiver(){
@@ -277,36 +283,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         getImageView().setImageResource(R.drawable.menu_flashlight_off);
 
 
-    }
-
-    private void clearMemory(){
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> infoList = manager.getRunningAppProcesses();
-        List<ActivityManager.RunningServiceInfo> serviceInfos = manager.getRunningServices(100);
-        long beforeMem = getAvaliMemory(context);
-        Log.d("MainActivity","before:"+beforeMem);
-        int count = 0;
-        if (infoList != null){
-            for (int i=0;i<infoList.size();i++){
-                ActivityManager.RunningAppProcessInfo appProcessInfo = infoList.get(i);
-                if (appProcessInfo.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE){
-                    String[] pkgList = appProcessInfo.pkgList;
-                    for (int j = 0;j<pkgList.length;j++){
-                        manager.killBackgroundProcesses(pkgList[j]);
-                        count++;
-                    }
-                }
-            }
-        }
-
-        Log.d("MainActivity","after:"+getAvaliMemory(context));
-    }
-
-    private long getAvaliMemory(Context context){
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        ActivityManager.MemoryInfo info = new ActivityManager.MemoryInfo();
-        manager.getMemoryInfo(info);
-        return info.availMem;
     }
 
     private BluetoothAdapter getBltAdapter(){
