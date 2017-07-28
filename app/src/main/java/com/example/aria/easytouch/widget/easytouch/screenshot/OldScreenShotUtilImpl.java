@@ -45,6 +45,8 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
 
     private static OldScreenShotUtilImpl instance;
 
+    private NewGlobalScreenshot newGlobalScreenshot;
+
     private OnScreenshotEventListener onScreenshotEventListener;
 
     private Display mDisplay;
@@ -62,6 +64,7 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
     private OldScreenShotUtilImpl(Context context)
     {
         this.context = context;
+        newGlobalScreenshot = new NewGlobalScreenshot(context);
     }
 
     public static OldScreenShotUtilImpl getInstance(Context context)
@@ -118,6 +121,7 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
 
         if(ShellUtils.checkRootPermission()){
                 ShellUtils.execCommand("/system/bin/screencap -p "+ fileFullPath,true);
+            Log.d("MainActivity","screenshot");
             Toast.makeText(context,context.getString(R.string.msg_screenshot_success) +FileUtil.getAppPath(context)+File.separator+FileUtil.SCREENCAPTURE_PATH,Toast.LENGTH_SHORT).show();
             onScreenshotEventListener.afterScreenshot();
         }
@@ -316,6 +320,11 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
         }
 
         return flag;
+    }
+
+    @Override
+    public void setHandler(Handler handler) {
+
     }
 }
 

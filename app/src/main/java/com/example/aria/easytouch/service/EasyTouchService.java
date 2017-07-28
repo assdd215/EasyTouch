@@ -13,7 +13,9 @@ import android.graphics.PixelFormat;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -29,6 +31,7 @@ import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
+import com.example.aria.easytouch.widget.easytouch.screenshot.GlobalScreenshot;
 import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
 
 /**
@@ -95,6 +98,7 @@ public class EasyTouchService extends Service{
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.STATE_FLOATWINDOW,true);
         editor.apply();
+
         addIconView();
     }
 
@@ -164,35 +168,6 @@ public class EasyTouchService extends Service{
         windowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         windowManager.addView(iconView,windowLayoutParams);
 
-//        iconView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d("MainActivity","run");
-//                Animation alphaAnimation = new AlphaAnimation(-1,1);
-//                alphaAnimation.setDuration(1500);
-//                alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-//                    @Override
-//                    public void onAnimationStart(Animation animation) {
-//                        Log.d("MainActivity","anim start");
-//                    }
-//
-//                    @Override
-//                    public void onAnimationEnd(Animation animation) {
-//                        Log.d("MainActivity","anim end");
-//                        iconView.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    @Override
-//                    public void onAnimationRepeat(Animation animation) {
-//
-//                    }
-//                });
-//                iconView.startAnimation(alphaAnimation);
-//
-//            }
-//        });
-
-
     }
 
     private void addMenuView(){
@@ -234,6 +209,7 @@ public class EasyTouchService extends Service{
         windowLayoutParams.y = 0;
         windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        newEasyTouchMenuHolder.getMainView().setVisibility(View.VISIBLE);
         windowManager.addView(newEasyTouchMenuHolder.getMainView(),windowLayoutParams);
 
     }
@@ -369,6 +345,8 @@ public class EasyTouchService extends Service{
         @Override
         public void beforeItemPerform(View view) {
             if (((String)view.getTag()).equals(getResources().getString(R.string.menu_screenshot))){
+                Log.d("MainActivity","beforeItemPerform");
+                newEasyTouchMenuHolder.getMainView().setVisibility(View.GONE);
                 addIconView();
                 iconView.setVisibility(View.GONE);
             }

@@ -14,6 +14,7 @@ import android.media.projection.MediaProjectionManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.os.AsyncTaskCompat;
 import android.util.DisplayMetrics;
@@ -129,6 +130,7 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
 
     @Override
     public void startScreenshot() {
+        Log.d("MainActivity","new screenshot");
         onScreenshotEventListener.beforeScreenshot();
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -143,6 +145,11 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
     @Override
     public boolean isSupportScreenshot() {
         return true;
+    }
+
+    @Override
+    public void setHandler(Handler handler) {
+
     }
 
 

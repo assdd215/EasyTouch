@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -44,6 +46,8 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private LightCamera cameraUtil;
     private ScreenShotUtil screenShotUtil;
     private BoostUtil boostUtil;
+
+
 
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override

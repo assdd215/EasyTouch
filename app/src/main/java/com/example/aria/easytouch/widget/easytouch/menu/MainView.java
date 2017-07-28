@@ -57,7 +57,7 @@ public class MainView {
 
         viewPager = new MenuViewPager(context);
         viewPager.setAdapter(menuPagerAdapter);
-
+        viewPager.setOffscreenPageLimit(2);
 
 
 
@@ -100,7 +100,7 @@ public class MainView {
         titleView.setGravity(Gravity.CENTER_HORIZONTAL);
         titleView.setTextSize(12);
         titleView.setTextColor(context.getResources().getColor(R.color.colorWhite));
-        LinearLayout.LayoutParams itemTitleParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams itemTitleParams = new LinearLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,16));
         itemTitleParams.setMargins(0,Utils.dip2px(context,5),0,0);
         itemTitleParams.gravity = Gravity.CENTER_HORIZONTAL;
 
