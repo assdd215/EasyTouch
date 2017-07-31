@@ -39,4 +39,5 @@ dependencies {
     compile 'com.flurry.android:ads:7.0.0@aar'
     compile files('libs/AndroidScreenCap.jar')
     compile 'org.jetbrains:annotations-java5:15.0'
+    compile 'com.google.code.gson:gson:2.8.1'
 }

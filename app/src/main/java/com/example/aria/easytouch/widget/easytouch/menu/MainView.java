@@ -64,6 +64,13 @@ public class MainView {
         menuLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,270),Utils.dip2px(context,270));
         menuParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        menuLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Log.d("MainActivity","menuLayout onLongClick");
+                return false;
+            }
+        });
         menuLayout.setLayoutParams(menuParams);
         menuLayout.setBackgroundResource(R.drawable.item_group);
         menuLayout.addView(viewPager);

@@ -63,6 +63,12 @@ public class EasyTouchService extends Service{
             if (Constants.STOP_SERVICE.equals(intent.getAction())) {
                 stopSelf();
             }
+            if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(intent.getAction())){
+                Log.d("MainActivity","Home Click!");
+                try {
+                    addIconView();
+                }catch (Exception e){e.printStackTrace();}
+            }
         }
     };
 
@@ -102,6 +108,7 @@ public class EasyTouchService extends Service{
     private void initReceiver(){
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.STOP_SERVICE);
+        filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         registerReceiver(serviceReceiver,filter);
     }
 
@@ -208,6 +215,7 @@ public class EasyTouchService extends Service{
         windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
         newEasyTouchMenuHolder.getMainView().setVisibility(View.VISIBLE);
+//        newEasyTouchMenuHolder.loadItems();
         windowManager.addView(newEasyTouchMenuHolder.getMainView(),windowLayoutParams);
 
     }
@@ -356,7 +364,9 @@ public class EasyTouchService extends Service{
         @Override
         public void afterItemClick(View view) {
             this.onMenuHolderEventListener.afterItemClick(view);
-            addIconView();
+            String tag = (String) view.getTag();
+            if (getString(R.string.menu_bluetooth).equals(tag) || getString(R.string.menu_wifi).equals(tag) || getString(R.string.menu_light).equals(tag)){}
+            else addIconView();
         }
     }
 }

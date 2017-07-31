@@ -16,6 +16,8 @@ public class FileUtil {
     //系统保存截图的路径
     public static final String SCREENCAPTURE_PATH = "UM" + File.separator + "Screenshots" + File.separator;
 
+    public static final String JSON_SHORTCUT_PATH = "UM" + File.separator + "jsons"+ File.separator + "items.json";
+
     public static final String SCREENSHOT_NAME = "Screenshot";
 
     public static String getAppPath(Context context) {
@@ -42,7 +44,14 @@ public class FileUtil {
         }
 
         return stringBuffer.toString();
+    }
 
+    public static String getItemJsonFileName(Context context){
+        StringBuffer stringBuffer = new StringBuffer(getAppPath(context));
+        stringBuffer.append(File.separator);
+        stringBuffer.append(JSON_SHORTCUT_PATH);
+
+        return stringBuffer.toString();
     }
 
     public static String getScreenShotsName(Context context) {

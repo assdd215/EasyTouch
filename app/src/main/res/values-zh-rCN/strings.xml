@@ -18,11 +18,19 @@
         <item>@string/qq_package</item>
         <item>@string/wechat_package</item>
         <item>@string/netEase_music_package</item>
+        <item>@string/bilibili_package</item>
+        <item>@string/weibo_package</item>
+        <item>@string/zhihu_package</item>
+        <item>@string/baiduMap_package</item>
     </string-array>
 
     <string name="qq_package">com.tencent.mobileqq</string>
     <string name="wechat_package">com.tencent.mm</string>
     <string name="netEase_music_package">com.netease.cloudmusic</string>
+    <string name="bilibili_package">tv.danmaku.bili</string>
+    <string name="weibo_package">com.sina.weibo</string>
+    <string name="zhihu_package">com.zhihu.android</string>
+    <string name="baiduMap_package">com.baidu.BaiduMap</string>
 
     <string name="setting_openFloatingWindow">打开悬浮窗</string>
     <string name="setting_openScreenshot">开启截图功能</string>
