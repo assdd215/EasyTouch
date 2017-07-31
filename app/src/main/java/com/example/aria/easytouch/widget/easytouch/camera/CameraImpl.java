@@ -108,7 +108,7 @@ public class CameraImpl implements LightCamera{
         }
     }
 
-    private boolean isSupportFlash(){
+    public boolean isSupportFlash(){
 
         boolean flag = false;
         PackageManager manager = context.getPackageManager();

@@ -25,7 +25,7 @@ import java.util.Objects;
  * Created by Aria on 2017/7/24.
  */
 
-public class SaveTask extends AsyncTask<Bitmap,Void,Map> implements GlobalScreenshot.onScreenShotListener{
+public class SaveTask extends AsyncTask<Bitmap,Void,Map>{
 
 
     private static final String RESULT = "RERSULT";
@@ -111,14 +111,4 @@ public class SaveTask extends AsyncTask<Bitmap,Void,Map> implements GlobalScreen
         onScreenshotEventListener.onPostImageSaved(result);
     }
 
-    @Override
-    public void onStartShot() {
-
-    }
-
-    @Override
-    public void onFinishShot(boolean success) {
-
-
-    }
 }

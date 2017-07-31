@@ -14,15 +14,27 @@
     <string name="menu_boost">Boost</string>
     <string name="menu_commend">Commend</string>
 
+
+
+    <string-array name="commonly_used_apps">
+        <item>@string/qq_package</item>
+        <item>@string/wechat_package</item>
+        <item>@string/netEase_music_package</item>
+    </string-array>
+
+    <string name="qq_package">com.tencent.mobileqq</string>
+    <string name="wechat_package">com.tencent.mm</string>
+    <string name="netEase_music_package">com.netease.cloudmusic</string>
+
     <string name="setting_openFloatingWindow">Open FloatingWindow</string>
     <string name="setting_openScreenshot">Open ScreenShot</string>
     <string name="btn_setting">Settings</string>
 
     <string name="msg_request_openFloatWindow">Please open the floating window first!</string>
-    <string name="dialog_request_open_floatwindow_pemission_content">the Display pop-up window permission is closed,please open the display pop-up window permission,otherwise the app will not function properly</string>
-    <string name="dialog_request_open_floatwindow_permission_title">floating window</string>
+    <string name="dialog_request_open_floatwindow_pemission_content">Please open the display pop-up window permission to make EastyTouch work properly!</string>
+    <string name="dialog_request_open_floatwindow_permission_title">EasyTouch</string>
     <string name="dialog_first_start_app_titile">EasyTouch</string>
-    <string name="dialog_first_start_app_content">Easytouch is unstatble, do you want to fix it?</string>
+    <string name="dialog_first_start_app_content">For better functionality, please give EasyTouch BOOT permission!</string>
 
     <string name="msg_open">open</string>
     <string name="msg_close">close</string>
@@ -39,4 +51,11 @@
     <string name="msg_screenshot_fail">Screenshot failed! Please check whether the file permissions are turned on and re-open the screenshot function to try again!</string>
     <string name="msg_memory_cleared">Boost done! The system is clean!</string>
     <string name="msg_memory_clear_with_number">Boost done! Has cleaned memory</string>
+    <string name="toast_after_goto_float_window_permission">Please find EasyTouch in the Management interface and open the "display pop-up window" permission!</string>
+    <string name="toast_after_goto_startup_permission">Please find EasyTouch in the Management interface and open the "allow boot" permission!</string>
+
+
+    <string name="brand_xiaomi">Xiaomi</string>
+    <string name="brand_nexus">google</string>
+
 </resources>

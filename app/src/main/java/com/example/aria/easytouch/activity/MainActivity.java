@@ -1,12 +1,14 @@
 package com.example.aria.easytouch.activity;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -19,13 +21,18 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.aria.easytouch.BuildConfig;
 import com.example.aria.easytouch.R;
 import com.example.aria.easytouch.service.EasyTouchService;
 import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
+import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
+import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
@@ -41,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_PROJECTION_CODE = 2;
     private static final int REQUEST_WRITE_WRITE_EXTERNAL_STORAGE = 3;
-    private AlertDialog dialog;
 
     private String[] screenshotPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -51,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     ShSwitchView screenShotView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.layout_screenshot)
+    RelativeLayout layoutScreenshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +67,8 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         ButterKnife.bind(this);
         initView();
         initListener();
-
         firstStart();
+        if (!isSupportScreenshot()) layoutScreenshot.setVisibility(View.GONE);
     }
 
     private void initView(){
@@ -189,6 +197,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public boolean checkFloatWindowPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //23后的悬浮窗权限属于危险权限 需要手动开启
             if(!Settings.canDrawOverlays(this)) {
+                Log.d("MainActivity","!Settings.canDrawOverlays(this)");
                 showAppSettingDialog();
                 return false;
             }
@@ -212,40 +221,54 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     private void firstStart(){
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARE_DATA,Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean(Constants.FIRST_START,true)){
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Constants.FIRST_START,false);
-            editor.apply();
+        int first = sharedPreferences.getInt(Constants.FIRST_START,1);
+        if (first == 2){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             Utils.createDialog(this, getString(R.string.dialog_first_start_app_titile), getString(R.string.dialog_first_start_app_content),
                     getString(R.string.msg_open), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                            startActivity(intent);
-                            dialog.cancel();
-                            dialog.dismiss();
-                        }
-                    });
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                    dialog.dismiss();
+                    Intent intent =  new Intent(Settings.ACTION_SETTINGS);
+                    startActivity(intent);
+                    Toast.makeText(MainActivity.this,getString(R.string.toast_after_goto_startup_permission),Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+        if (first <= 2){
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt(Constants.FIRST_START,++first);
+            editor.apply();
         }
     }
 
+    public boolean isSupportScreenshot() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            return true;
+
+        boolean flag = false;
+        if (ShellUtils.checkRootPermission()){
+            flag = true;
+        }
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
+            flag = true;
+        }
+
+        return flag;
+    }
+
     private void showAppSettingDialog(){
-        dialog = new AlertDialog.Builder(this).setTitle(getResources().getString(R.string.dialog_request_open_floatwindow_permission_title))
-                .setMessage(getResources().getString(R.string.dialog_request_open_floatwindow_pemission_content))
-                .setPositiveButton(getResources().getString(R.string.msg_open), new DialogInterface.OnClickListener() {
+        Utils.createDialog(this, getString(R.string.dialog_request_open_floatwindow_permission_title), getString(R.string.dialog_request_open_floatwindow_pemission_content),
+                getString(R.string.msg_open), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
                         startActivity(intent);
+                        Toast.makeText(MainActivity.this,getString(R.string.toast_after_goto_float_window_permission),Toast.LENGTH_LONG).show();
                     }
-                }).setNegativeButton(getResources().getString(R.string.msg_close), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        dialog.dismiss();
-                    }
-                }).create();
-        dialog.show();
+                });
+
     }
 
     @Override
@@ -284,6 +307,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 break;
         }
     }
+
 
 
 }

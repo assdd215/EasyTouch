@@ -19,6 +19,11 @@
         <item name="android:windowExitAnimation">@anim/anim_iconview_exit</item>
     </style>
 
+    <style name="MenuViewAnimator">
+        <item name="android:windowEnterAnimation">@anim/anim_menuview_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_menuview_exit</item>
+    </style>
+
     <style name="menu_textview">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>

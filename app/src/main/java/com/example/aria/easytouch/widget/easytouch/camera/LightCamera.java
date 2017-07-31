@@ -9,4 +9,5 @@ public interface LightCamera {
     boolean getOpenCamera();
     void setOpenCamera(boolean isOpen);
     void turnOnLight();
+    boolean isSupportFlash();
 }

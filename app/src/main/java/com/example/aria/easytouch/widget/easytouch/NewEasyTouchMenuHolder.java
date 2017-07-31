@@ -5,10 +5,12 @@ import android.app.ActivityManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
@@ -203,6 +205,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             }
         });
 
+        if (cameraUtil.isSupportFlash())
         mainView.addMenuItem(context.getString(R.string.menu_light), context.getResources().getDrawable(R.drawable.menu_flashlight_off), new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -239,6 +242,39 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 onMenuHolderEventListener.afterItemClick(v);
             }
         });
+
+//        addCommonlyApps();
+    }
+
+    private void addCommonlyApps(){
+        String[] commonApps = context.getResources().getStringArray(R.array.commonly_used_apps);
+        PackageManager packageManager = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_MAIN,null);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(intent,0);
+        for (ResolveInfo info: resolveInfos){
+            for (String app: commonApps){
+                if (info.activityInfo.packageName.equals(app)){
+                    final String packageName = info.activityInfo.packageName;
+                    final String lauchName = info.activityInfo.name;
+                    mainView.addMenuItem(info.loadLabel(packageManager).toString(), info.loadIcon(packageManager), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onMenuHolderEventListener.beforeItemPerform(v);
+                            ComponentName componentName = new ComponentName(packageName,lauchName);
+                            Intent intent1 = new Intent(Intent.ACTION_MAIN);
+                            intent1.addCategory(Intent.CATEGORY_LAUNCHER);
+                            intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                            intent1.setComponent(componentName);
+                            onMenuHolderEventListener.afterItemClick(v);
+                            context.startActivity(intent1);
+                        }
+                    });
+                }
+            }
+        }
+
     }
 
     private void initReceiver(){

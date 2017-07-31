@@ -107,7 +107,7 @@ public class MainView {
 
         itemLayout.addView(iconView,itemIconParams);
         itemLayout.addView(titleView,itemTitleParams);
-        setItemPosition(itemLayoutParams,itemModelList.size());
+        setItemPosition(itemLayoutParams,itemModelList.size()%9);
         menuPagerAdapter.addItem(itemLayout,itemLayoutParams);
 
         itemModelList.add(new ItemModel(iconView,itemLayout,itemTitle,itemModelList.size()));

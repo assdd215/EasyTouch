@@ -13,9 +13,7 @@ import android.graphics.PixelFormat;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.DisplayMetrics;
@@ -31,7 +29,6 @@ import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
-import com.example.aria.easytouch.widget.easytouch.screenshot.GlobalScreenshot;
 import com.example.aria.easytouch.widget.easytouch.screenshot.OnScreenshotEventListener;
 
 /**
@@ -209,6 +206,7 @@ public class EasyTouchService extends Service{
         windowLayoutParams.y = 0;
         windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+        windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
         newEasyTouchMenuHolder.getMainView().setVisibility(View.VISIBLE);
         windowManager.addView(newEasyTouchMenuHolder.getMainView(),windowLayoutParams);
 
@@ -233,6 +231,7 @@ public class EasyTouchService extends Service{
 
     @Override
     public void onDestroy() {
+        Log.d("MainActivity","service onDestory start");
         super.onDestroy();
         if (serviceReceiver != null)
         unregisterReceiver(serviceReceiver);
@@ -258,6 +257,7 @@ public class EasyTouchService extends Service{
         editor.putBoolean(Constants.STATE_FLOATWINDOW,false);
         editor.putBoolean(Constants.STATE_SCREENSHOT,false);
         editor.apply();
+        Log.d("MainActivity","service onDestory");
     }
 
     private class MyAsyncTask extends AsyncTask{
@@ -344,8 +344,9 @@ public class EasyTouchService extends Service{
 
         @Override
         public void beforeItemPerform(View view) {
-            if (((String)view.getTag()).equals(getResources().getString(R.string.menu_screenshot))){
-                Log.d("MainActivity","beforeItemPerform");
+
+            String tag = (String) view.getTag();
+            if (getString(R.string.menu_screenshot).equals(tag)){
                 newEasyTouchMenuHolder.getMainView().setVisibility(View.GONE);
                 addIconView();
                 iconView.setVisibility(View.GONE);
