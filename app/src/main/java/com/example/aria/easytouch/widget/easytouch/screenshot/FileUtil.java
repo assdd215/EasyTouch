@@ -1,4 +1,4 @@
-package com.example.aria.easytouch.widget.easytouch;
+package com.example.aria.easytouch.widget.easytouch.screenshot;
 
 import android.content.Context;
 import android.os.Environment;

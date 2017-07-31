@@ -169,7 +169,7 @@ public class Camera2Impl implements LightCamera{
 
     }
 
-    private boolean isSupportFlash(){
+    public boolean isSupportFlash(){
         boolean flag = false;
             cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
             try {
@@ -190,6 +190,11 @@ public class Camera2Impl implements LightCamera{
 
     public boolean getOpenCamera(){
         return isOpenCamera;
+    }
+
+    @Override
+    public void setOpenCamera(boolean isOpen) {
+        this.isOpenCamera = isOpen;
     }
 
 }

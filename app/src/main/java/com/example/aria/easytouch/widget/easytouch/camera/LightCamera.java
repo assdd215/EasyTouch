@@ -7,5 +7,7 @@ package com.example.aria.easytouch.widget.easytouch.camera;
 public interface LightCamera {
 
     boolean getOpenCamera();
+    void setOpenCamera(boolean isOpen);
     void turnOnLight();
+    boolean isSupportFlash();
 }

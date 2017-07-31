@@ -1,10 +1,22 @@
 package com.example.aria.easytouch.util;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.media.Image;
+import android.support.v7.app.AlertDialog;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.aria.easytouch.R;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 
 /**
@@ -35,5 +47,29 @@ public class Utils {
             return bitmap;
         }
         return null;
+    }
+
+    public static void createDialog(Context context, String title, String message, String positive, DialogInterface.OnClickListener posiviteListener,
+                                    String negative, DialogInterface.OnClickListener negativeListener){
+        AlertDialog dialog = new AlertDialog.Builder(context).setTitle(title)
+                                .setMessage(message)
+                                .setPositiveButton(positive,posiviteListener)
+                                .setNegativeButton(negative,negativeListener)
+                                .create();
+        dialog.show();
+    }
+
+    public static void createDialog(Context context, String title, String message, String positive, DialogInterface.OnClickListener posiviteListener){
+
+        String negative = context.getString(R.string.msg_close);
+        DialogInterface.OnClickListener negativeListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        };
+
+        createDialog(context,title,message,positive,posiviteListener,negative,negativeListener);
     }
 }

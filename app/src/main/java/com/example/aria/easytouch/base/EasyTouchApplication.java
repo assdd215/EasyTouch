@@ -7,8 +7,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.example.aria.easytouch.activity.MainActivity;
+import com.flurry.android.FlurryAgent;
+import com.flurry.android.FlurryAgentListener;
 
 import java.util.Locale;
 
@@ -18,28 +21,36 @@ import java.util.Locale;
 
 public class EasyTouchApplication extends Application{
 
-    private boolean openFloatingWindow;
-    private boolean openScreenShot;
+    private static final String FLURRY_API_KEY = "GPXPBBQKSHPM6WWTN88S";
+
+    private FlurryAgentListener flurryAgentListener;
 
     @Override
     public void onCreate() {
         super.onCreate();
-//        updateLanguage();
+        initFlurry();
     }
 
-    public void setOpenFloatingWindow(boolean openFloatingWindow) {
-        this.openFloatingWindow = openFloatingWindow;
+
+
+    private void initFlurry(){
+
+        flurryAgentListener = new FlurryAgentListener() {
+            @Override
+            public void onSessionStarted() {
+                Log.d("MainActivity","onSessionStarted");
+            }
+        };
+
+        new FlurryAgent.Builder()
+                .withLogEnabled(true)
+                .withCaptureUncaughtExceptions(true)
+                .withContinueSessionMillis(10)
+                .withLogEnabled(true)
+                .withLogLevel(Log.VERBOSE)
+                .withListener(flurryAgentListener)
+                .build(this, FLURRY_API_KEY);
     }
 
-    public void setOpenScreenShot(boolean openScreenShot) {
-        this.openScreenShot = openScreenShot;
-    }
 
-    public boolean getOpenFloatingWindow(){
-        return openFloatingWindow;
-    }
-
-    public boolean getOpenScreenShot(){
-        return openScreenShot;
-    }
 }

@@ -8,10 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="SettingActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SettingActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">#464545</item>
         <item name="colorPrimary">#797878</item>
         <item name="colorAccent">#728e43</item>
+    </style>
+
+    <style name="IconViewAnimator">
+        <item name="android:windowEnterAnimation">@anim/anim_iconview_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_iconview_exit</item>
+    </style>
+
+    <style name="MenuViewAnimator">
+        <item name="android:windowEnterAnimation">@anim/anim_menuview_enter</item>
+        <item name="android:windowExitAnimation">@anim/anim_menuview_exit</item>
     </style>
 
     <style name="menu_textview">

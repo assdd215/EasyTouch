@@ -20,17 +20,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:8.7.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     compile 'pub.devrel:easypermissions:0.4.2'
     compile 'com.7heaven.ioswidget:iosswitch:0.6'
-
+    // Required for Flurry Analytics integration
+    compile 'com.flurry.android:analytics:7.0.0@aar'
+    // Optional - If you want to use the Ads SDK
+    compile 'com.flurry.android:ads:7.0.0@aar'
+    compile files('libs/AndroidScreenCap.jar')
+    compile 'org.jetbrains:annotations-java5:15.0'
 }
