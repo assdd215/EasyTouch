@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.NewEasyTouchMenuHolder;
@@ -356,7 +356,13 @@ public class EasyTouchService extends Service{
         @Override
         public void afterItemClick(View view) {
             this.onMenuHolderEventListener.afterItemClick(view);
-            addIconView();
+            String tag = (String) view.getTag();
+            if (getString(R.string.menu_light).equals(tag) || getString(R.string.menu_wifi).equals(tag) || getString(R.string.menu_bluetooth).equals(tag)){}
+            else{
+                addIconView();
+            }
+
+
         }
     }
 }

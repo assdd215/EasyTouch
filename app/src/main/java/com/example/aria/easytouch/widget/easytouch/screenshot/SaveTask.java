@@ -11,8 +11,8 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
-import com.example.aria.easytouch.service.EasyTouchService;
+
+import com.assistivetool.booster.easytouch.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

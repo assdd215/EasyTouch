@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.aria.easytouch">
+    package="com.assistivetool.booster.easytouch">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
 
     <application
-        android:name=".base.EasyTouchApplication"
+        android:name="com.example.aria.easytouch.base.EasyTouchApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
@@ -31,7 +31,7 @@
         <activity
             android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.example.aria.easytouch.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,11 +39,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.setting.SettingActivity"/>
+        <activity android:name="com.example.aria.easytouch.ui.setting.SettingActivity"/>
 
-        <activity android:name=".activity.PreScreenshotActivity"/>
+        <activity android:name="com.example.aria.easytouch.activity.PreScreenshotActivity"/>
 
-        <activity android:name=".activity.MyActivity">
+        <activity android:name="com.example.aria.easytouch.activity.MyActivity">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
@@ -51,14 +51,14 @@
             <!--</intent-filter>-->
         </activity>
 
-        <service android:name=".service.EasyTouchService" />
+        <service android:name="com.example.aria.easytouch.service.EasyTouchService" />
 
-        <service android:name=".service.MyService"/>
+        <service android:name="com.example.aria.easytouch.service.MyService"/>
 
-        <service android:name=".service.MyJobService"
+        <service android:name="com.example.aria.easytouch.service.MyJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
-        <receiver android:name=".broadcast.BootCompleteReceiver">
+        <receiver android:name="com.example.aria.easytouch.broadcast.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <category android:name="android.intent.category.LAUNCHER" />

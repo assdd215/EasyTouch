@@ -22,7 +22,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
 import com.example.aria.easytouch.widget.easytouch.boost.MemoryBoostUtil;

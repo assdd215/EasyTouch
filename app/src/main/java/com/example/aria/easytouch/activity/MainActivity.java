@@ -25,14 +25,12 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.BuildConfig;
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.service.EasyTouchService;
 import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
-import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
@@ -85,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.setting_menu,menu);
+//        getMenuInflater().inflate(R.menu.setting_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 

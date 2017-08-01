@@ -7,7 +7,8 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+
+import com.assistivetool.booster.easytouch.R;
 
 import java.util.List;
 
