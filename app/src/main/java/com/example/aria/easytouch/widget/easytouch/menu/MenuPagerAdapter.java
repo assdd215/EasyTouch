@@ -2,6 +2,7 @@ package com.example.aria.easytouch.widget.easytouch.menu;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +22,17 @@ public class MenuPagerAdapter extends PagerAdapter{
     private int totalItems;
     private float preX = 0;
 
+    private View.OnLongClickListener pageLongClickListener;
+
     public MenuPagerAdapter(Context context){
         this.context = context;
         pageList = new ArrayList<>();
         totalItems = 0;
     }
 
+    public void setPageLongClickListener(View.OnLongClickListener pageLongClickListener) {
+        this.pageLongClickListener = pageLongClickListener;
+    }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
@@ -77,9 +83,18 @@ public class MenuPagerAdapter extends PagerAdapter{
             pageList.add(layout);
 
         }
-        RelativeLayout relativeLayout = (RelativeLayout) pageList.get(pageList.size() -1 );
+        RelativeLayout relativeLayout = (RelativeLayout) pageList.get((totalItems - 1) / 9);
+        relativeLayout.setOnLongClickListener(pageLongClickListener);
         relativeLayout.addView(item,params);
         notifyDataSetChanged();
+    }
+
+    public void clearItems(){
+        for (View view:pageList){
+            RelativeLayout layout = (RelativeLayout) view;
+            layout.removeAllViews();
+        }
+        totalItems = 0;
     }
 
 

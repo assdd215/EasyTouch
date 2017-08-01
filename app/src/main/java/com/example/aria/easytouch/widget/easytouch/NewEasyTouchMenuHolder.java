@@ -13,11 +13,9 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.os.AsyncTaskCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -45,6 +43,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,28 +62,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private List<ResolveInfo> resolveInfos;
     private PackageManager packageManager;
     private Gson gson;
-
-    private boolean refresh = true;
-//    private AsyncTask refreshInfoListTask = new AsyncTask() {
-//        @Override
-//        protected Object doInBackground(Object[] params) {
-//
-//            while (refresh){
-//                try {
-//                    Thread.sleep(5000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                packageManager = context.getPackageManager();
-//                Intent intent = new Intent(Intent.ACTION_MAIN,null);
-//                intent.addCategory(Intent.CATEGORY_LAUNCHER);
-//                resolveInfos = packageManager.queryIntentActivities(intent,0);
-//                Log.d("Counting","refresh InfoList");
-//            }
-//            return null;
-//        }
-//    };
-
+    private List<FloatMenuItem> itemList;
 
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override
@@ -125,9 +103,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         this.context = context;
         mainView = new MainView(context);
         initData();
-//        initMenuItems();
-        loadItems();
-//        updateMenuIcons();
         initReceiver();
     }
 
@@ -146,8 +121,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.apply();
         gson = new Gson();
-
-//        AsyncTaskCompat.executeParallel(refreshInfoListTask);
+        itemList = new ArrayList<>();
     }
 
     private List<FloatMenuItem> initMenuItems(){
@@ -159,30 +133,30 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_tel);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_tel);
+        model.setItemTitleId(String.valueOf(R.string.menu_tel));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_tel), context.getResources().getDrawable(R.drawable.menu_tel), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_message);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_message);
+        model.setItemTitleId(String.valueOf(R.string.menu_message));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_message), context.getResources().getDrawable(R.drawable.menu_message), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_camera);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_camera);
+        model.setItemTitleId(String.valueOf(R.string.menu_camera));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_camera), context.getResources().getDrawable(R.drawable.menu_camera), functionItemListener);
+        mainView.addMenuItem(String.valueOf(context.getString(R.string.menu_camera)), context.getResources().getDrawable(R.drawable.menu_camera), functionItemListener);
 
 
         if (screenShotUtil.isSupportScreenshot()){
             model = new FloatMenuItem();
             model.setIconId(R.drawable.menu_cut_enable);
             model.setType(ItemModel.TYPE_FUNCTION);
-            model.setItemTitleId(R.string.menu_screenshot);
+            model.setItemTitleId(String.valueOf(R.string.menu_screenshot));
             modelList.add(model);
             mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), functionItemListener);
         }
@@ -190,21 +164,21 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_blutooth_off);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_bluetooth);
+        model.setItemTitleId(String.valueOf(R.string.menu_bluetooth));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_bluetooth), context.getResources().getDrawable(R.drawable.menu_blutooth_off), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_wifi_off);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_wifi);
+        model.setItemTitleId(String.valueOf(R.string.menu_wifi));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_wifi), context.getResources().getDrawable(R.drawable.menu_wifi_off), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_browser);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_search);
+        model.setItemTitleId(String.valueOf(R.string.menu_search));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_search), context.getResources().getDrawable(R.drawable.menu_browser), functionItemListener);
 
@@ -212,7 +186,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
             model = new FloatMenuItem();
             model.setIconId(R.drawable.menu_flashlight_off);
             model.setType(ItemModel.TYPE_FUNCTION);
-            model.setItemTitleId(R.string.menu_light);
+            model.setItemTitleId(String.valueOf(R.string.menu_light));
             modelList.add(model);
             mainView.addMenuItem(context.getString(R.string.menu_light), context.getResources().getDrawable(R.drawable.menu_flashlight_off), functionItemListener);
         }
@@ -220,19 +194,19 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_home);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_home);
+        model.setItemTitleId(String.valueOf(R.string.menu_home));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_home), context.getResources().getDrawable(R.drawable.menu_home), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_boost);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(R.string.menu_boost);
+        model.setItemTitleId(String.valueOf(R.string.menu_boost));
         modelList.add(model);
         mainView.addMenuItem(context.getString(R.string.menu_boost), context.getResources().getDrawable(R.drawable.menu_boost), functionItemListener);
 
 //        addCommonlyApps();
-//        initCommonlyApps(modelList);
+        initCommonlyApps(modelList);
         return modelList;
     }
 
@@ -241,21 +215,20 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         Intent intent = new Intent(Intent.ACTION_MAIN,null);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveInfos = packageManager.queryIntentActivities(intent,0);
-
+        mainView.clearItems();
 
         String filePath = FileUtil.getItemJsonFileName(context);
         File file = new File(filePath);
         FileReader reader = null;
-
         try {
             if (!file.exists()){
+                itemList = initMenuItems();
                 if (!file.getParentFile().exists())file.getParentFile().mkdirs();
                 file.createNewFile();
-                List<FloatMenuItem> modelList = initMenuItems();
                 Gson gson = new Gson();
                 FileWriter writer = new FileWriter(file,false);
                 BufferedWriter bufferedWriter = new BufferedWriter(writer);
-                bufferedWriter.write(gson.toJson(modelList));
+                bufferedWriter.write(gson.toJson(itemList));
                 bufferedWriter.close();
                 writer.close();
             }else {
@@ -268,8 +241,8 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 }
                 bufferedReader.close();
                 reader.close();
-                List<FloatMenuItem> modelList =  gson.fromJson(builder.toString(),new TypeToken<ArrayList<FloatMenuItem>>(){}.getType());
-                setMenuItems(modelList);
+                itemList =  gson.fromJson(builder.toString(),new TypeToken<ArrayList<FloatMenuItem>>(){}.getType());
+                setMenuItems(itemList);
 
             }
         }catch (Exception e){e.printStackTrace();}
@@ -277,16 +250,47 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         updateMenuIcons();
     }
 
+    public void saveItems(){
+        if (itemList == null) return;
+        String filePath = FileUtil.getItemJsonFileName(context);
+        File file = new File(filePath);
+        FileWriter writer = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            if (!file.exists()){
+                if (!file.getParentFile().exists())file.getParentFile().mkdirs();
+                file.createNewFile();
+            }
+            writer = new FileWriter(file,false);
+            bufferedWriter = new BufferedWriter(writer);
+            bufferedWriter.write(gson.toJson(itemList));
+
+        }catch (Exception e){e.printStackTrace();}
+        finally {
+            try {
+                bufferedWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     private void setMenuItems(List<FloatMenuItem> modelList){
         for (FloatMenuItem item:modelList){
             switch (item.getType()){
 
                 case FloatMenuItem.TYPE_FUNCTION:
-                    mainView.addMenuItem(context.getString(item.getItemTitleId()),context.getResources().getDrawable(item.getIconId()),functionItemListener);
+                    mainView.addMenuItem(context.getString(Integer.parseInt(item.getItemTitleId())),context.getResources().getDrawable(item.getIconId()),functionItemListener);
                     break;
                 case FloatMenuItem.TYPE_SHORTCUT:
                     for (ResolveInfo info: resolveInfos){
-                        if (info.activityInfo.packageName.equals(item.getPackageName())){
+                        if (info.activityInfo.packageName.equals(item.getTitleName())){
                             addCommonlyApp(info);
                             break;
                         }
@@ -303,13 +307,12 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
     private void initCommonlyApps(List<FloatMenuItem> modelList){
         String[] commonApps = context.getResources().getStringArray(R.array.commonly_used_apps);
-        Log.d("MainActivity","commonApps:"+commonApps.length+"    "+commonApps.toString());
         for (ResolveInfo info: resolveInfos){
             for (String app: commonApps){
                 if (info.activityInfo.packageName.equals(app)){
                     FloatMenuItem item = new FloatMenuItem();
                     item.setType(FloatMenuItem.TYPE_SHORTCUT);
-                    item.setPackageName(app);
+                    item.setItemTitleId(app);
                     modelList.add(item);
                     addCommonlyApp(info);
                 }
@@ -422,10 +425,17 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
     }
 
+    private void showDeleteButtons(){
+
+    }
+
     private View.OnClickListener functionItemListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+
             String tag = (String) v.getTag();
+            Toast.makeText(context,tag + "   "+v.isClickable(),Toast.LENGTH_SHORT).show();
+            Log.d("MainActivity",v.toString());
             if (tag.equals(context.getString(R.string.menu_tel))){
                 onTelClick(v);
 

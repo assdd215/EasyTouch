@@ -24,5 +24,5 @@ package android.content.pm;
   * {@hide} 
   */ 
  oneway interface IPackageDataObserver { 
-     void onRemoveCompleted(in String packageName, boolean succeeded); 
+     void onRemoveCompleted(in String titleName, boolean succeeded);
  }

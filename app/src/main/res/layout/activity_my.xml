@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout">
@@ -13,6 +13,19 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/image"/>
+        android:id="@+id/image"
+        android:src="@drawable/icon_delete"
+        android:background="@color/colorAccent"
+        android:scaleType="centerInside"
+        android:padding="5dp"
+        android:layout_below="@id/btnClearMemory"
+        android:layout_marginTop="5dp"/>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorAccent"
+        android:layout_below="@+id/image"
+        android:id="@+id/testLayout"/>
+
+</RelativeLayout>

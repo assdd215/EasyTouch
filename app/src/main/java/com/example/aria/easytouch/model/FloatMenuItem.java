@@ -9,11 +9,11 @@ public class FloatMenuItem {
     public static final int TYPE_FUNCTION = 1;
     public static final int TYPE_EMPTY = 2;
 
-    private int itemTitleId;
+    private String itemTitleId;
     private int position;
     private int type;
+    private String titleName;
     private int iconId;
-    private String packageName;
 
     public FloatMenuItem(){}
 
@@ -29,15 +29,15 @@ public class FloatMenuItem {
         this.position = position;
     }
 
-    public void setItemTitleId(int itemTitleId) {
+    public void setItemTitleId(String itemTitleId) {
         this.itemTitleId = itemTitleId;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setTitleName(String titleName) {
+        this.titleName = titleName;
     }
 
-    public int getItemTitleId() {
+    public String getItemTitleId() {
         return itemTitleId;
     }
 
@@ -53,7 +53,7 @@ public class FloatMenuItem {
         return iconId;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public String getTitleName() {
+        return titleName;
     }
 }

@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 
 import com.example.aria.easytouch.R;
@@ -40,9 +42,11 @@ public class MyActivity extends AppCompatActivity{
     @BindView(R.id.btnClearMemory)
     Button btnClearMemory;
     @BindView(R.id.layout)
-    LinearLayout layout;
+    RelativeLayout layout;
     @BindView(R.id.image)
     ImageView imageView;
+    @BindView(R.id.testLayout)
+    RelativeLayout testLayout;
 
 
     @Override
@@ -61,30 +65,15 @@ public class MyActivity extends AppCompatActivity{
 
     }
 
-    @OnClick({R.id.btnClearMemory})
+    @OnClick({R.id.btnClearMemory,R.id.testLayout})
     void onClick(View view){
         switch (view.getId()) {
             case R.id.btnClearMemory:
-                Log.d("MainActivity","clear click");
-                PackageManager packageManager = getPackageManager();
-                Intent mainIntent = new Intent(Intent.ACTION_MAIN,null);
-                mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                List<ResolveInfo> resolveInfos = packageManager.queryIntentActivities(mainIntent,0);
-                for (ResolveInfo info: resolveInfos){
-                    Log.d("MainActivity","appName:"+info.loadLabel(packageManager).toString());
-                    Log.d("MainActivity","packageName:"+info.activityInfo.packageName);
-                    Log.d("MainActivity","first:"+info.activityInfo.name);
-                    if ("com.tencent.mobileqq".equals(info.activityInfo.packageName)){
-                        ComponentName componentName = new ComponentName(info.activityInfo.packageName,info.activityInfo.name);
-                        imageView.setImageDrawable(info.loadIcon(packageManager));
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-                        intent.setComponent(componentName);
-                        startActivity(intent);
-                    }
-                }
+                testLayout.setClickable(false);
+                Toast.makeText(MyActivity.this,"testLayout:"+testLayout.isClickable(),Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.testLayout:
+                Toast.makeText(MyActivity.this,"testLayout click!",Toast.LENGTH_SHORT).show();
                 break;
         }
     }

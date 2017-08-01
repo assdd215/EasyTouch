@@ -5,13 +5,16 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aria.easytouch.R;
+import com.example.aria.easytouch.model.FloatMenuItem;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
 
@@ -33,16 +36,43 @@ public class MainView {
     private MenuViewPager viewPager;
     private MenuPagerAdapter menuPagerAdapter;
 
+    private boolean deleteVisible ;
 
     public MainView(Context context){
         this.context = context;
         initMainView();
     }
 
+    private View.OnLongClickListener onMenuItemsLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            showDeleteButtons();
+            return true;
+        }
+    };
+
+    private void showDeleteButtons(){
+        for (ItemModel itemModel:itemModelList) {
+            itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.VISIBLE);
+            itemModel.getItemLayout().setClickable(false);
+        }
+        deleteVisible = true;
+    }
+
+    private void  hideDeleteButtons(){
+        for (ItemModel itemModel:itemModelList) {
+            itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.GONE);
+            itemModel.getItemLayout().setClickable(true);
+        }
+        deleteVisible = false;
+    }
+
     private void initMainView() {
 
         itemModelList = new ArrayList<>(9);
+        deleteVisible = false;
         menuPagerAdapter = new MenuPagerAdapter(context);
+        menuPagerAdapter.setPageLongClickListener(onMenuItemsLongClickListener);
 
         baseLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -51,7 +81,10 @@ public class MainView {
         baseLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onMenuHolderEventListener.afterItemClick(v);
+                if (deleteVisible)
+                    hideDeleteButtons();
+                else
+                    onMenuHolderEventListener.afterItemClick(v);
             }
         });
 
@@ -61,16 +94,9 @@ public class MainView {
 
 
 
-        menuLayout = new RelativeLayout(context);
+        menuLayout = new MenuLayout(context);
         RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,270),Utils.dip2px(context,270));
         menuParams.addRule(RelativeLayout.CENTER_IN_PARENT);
-        menuLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.d("MainActivity","menuLayout onLongClick");
-                return false;
-            }
-        });
         menuLayout.setLayoutParams(menuParams);
         menuLayout.setBackgroundResource(R.drawable.item_group);
         menuLayout.addView(viewPager);
@@ -82,44 +108,41 @@ public class MainView {
         return baseLayout;
     }
 
-    public boolean addMenuItem(String itemTitle, Drawable icon){
-        return addMenuItem(itemTitle,icon,null);
-
-    }
+//    public boolean addMenuItem(String itemTitle, Drawable icon){
+//        return addMenuItem(itemTitle,icon,null);
+//
+//    }
 
     public boolean addMenuItem(String itemTitle, Drawable icon, View.OnClickListener onClickListener){
         boolean flag = true;
-        LinearLayout itemLayout = new LinearLayout(context);
-        ImageView iconView = new ImageView(context);
-        TextView titleView = new TextView(context);
+        RelativeLayout itemLayout = (RelativeLayout) LayoutInflater.from(context).inflate(R.layout.float_menu_item,null,false);
+        ImageView iconView = (ImageView) itemLayout.findViewById(R.id.iconView);
+        TextView titleView = (TextView) itemLayout.findViewById(R.id.titleView);
+        ImageView deleteIcon = (ImageView) itemLayout.findViewById(R.id.deleteIcon);
+        itemLayout.setOnLongClickListener(onMenuItemsLongClickListener);
 
-        itemLayout.setOrientation(LinearLayout.VERTICAL);
-        RelativeLayout.LayoutParams itemLayoutParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,72));
-        itemLayout.setOnClickListener(onClickListener);
         itemLayout.setTag(itemTitle);
-
-        iconView.setImageDrawable(icon);
-        iconView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        LinearLayout.LayoutParams itemIconParams = new LinearLayout.LayoutParams(Utils.dip2px(context,32),Utils.dip2px(context,32));
-        itemIconParams.gravity = Gravity.CENTER;
-
+        itemLayout.setOnClickListener(onClickListener);
         titleView.setText(itemTitle);
-        titleView.setGravity(Gravity.CENTER_HORIZONTAL);
-        titleView.setTextSize(12);
-        titleView.setTextColor(context.getResources().getColor(R.color.colorWhite));
-        LinearLayout.LayoutParams itemTitleParams = new LinearLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,16));
-        itemTitleParams.setMargins(0,Utils.dip2px(context,5),0,0);
-        itemTitleParams.gravity = Gravity.CENTER_HORIZONTAL;
+        iconView.setImageDrawable(icon);
 
-
-        itemLayout.addView(iconView,itemIconParams);
-        itemLayout.addView(titleView,itemTitleParams);
+        deleteIcon.setVisibility(View.GONE);
+        deleteIcon.setTag(itemTitle);
+        deleteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String tag = (String) v.getTag();
+                Toast.makeText(context,tag + "is click",Toast.LENGTH_SHORT).show();
+            }
+        });
+        RelativeLayout.LayoutParams itemLayoutParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,72));
         setItemPosition(itemLayoutParams,itemModelList.size()%9);
         menuPagerAdapter.addItem(itemLayout,itemLayoutParams);
-
         itemModelList.add(new ItemModel(iconView,itemLayout,itemTitle,itemModelList.size()));
         return flag;
     }
+
+
 
     public void setOnMenuHolderEventListener(OnMenuHolderEventListener onMenuHolderEventListener) {
         this.onMenuHolderEventListener = onMenuHolderEventListener;
@@ -188,5 +211,10 @@ public class MainView {
             }
         }
         return null;
+    }
+
+    public void clearItems(){
+        menuPagerAdapter.clearItems();
+        itemModelList.clear();
     }
 }

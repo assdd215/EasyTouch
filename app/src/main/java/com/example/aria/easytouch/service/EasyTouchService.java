@@ -171,7 +171,8 @@ public class EasyTouchService extends Service{
         windowLayoutParams.height = Utils.dip2px(getApplicationContext(),ICON_SIZE);
         windowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         windowManager.addView(iconView,windowLayoutParams);
-
+        if (newEasyTouchMenuHolder != null)
+            newEasyTouchMenuHolder.saveItems();
     }
 
     private void addMenuView(){
@@ -215,7 +216,8 @@ public class EasyTouchService extends Service{
         windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
         newEasyTouchMenuHolder.getMainView().setVisibility(View.VISIBLE);
-//        newEasyTouchMenuHolder.loadItems();
+
+        newEasyTouchMenuHolder.loadItems();
         windowManager.addView(newEasyTouchMenuHolder.getMainView(),windowLayoutParams);
 
     }

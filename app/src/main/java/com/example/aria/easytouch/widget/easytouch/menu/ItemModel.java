@@ -2,6 +2,7 @@ package com.example.aria.easytouch.widget.easytouch.menu;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by Aria on 2017/7/21.
@@ -14,13 +15,13 @@ public class ItemModel {
     public static final int TYPE_EMPTY = 2;
 
     private ImageView imageView;
-    private LinearLayout itemLayout;
+    private RelativeLayout itemLayout;
     private String itemTitle;
     private int position;
     private int iconId;
     private int type;
 
-    public ItemModel(ImageView imageView,LinearLayout itemLayout,String  itemTitle,int position){
+    public ItemModel(ImageView imageView,RelativeLayout itemLayout,String  itemTitle,int position){
         this.imageView = imageView;
         this.itemLayout = itemLayout;
         this.itemTitle = itemTitle;
@@ -45,7 +46,7 @@ public class ItemModel {
         this.imageView = imageView;
     }
 
-    public void setItemLayout(LinearLayout itemLayout) {
+    public void setItemLayout(RelativeLayout itemLayout) {
         this.itemLayout = itemLayout;
     }
 
@@ -57,7 +58,7 @@ public class ItemModel {
         return imageView;
     }
 
-    public LinearLayout getItemLayout() {
+    public RelativeLayout getItemLayout() {
         return itemLayout;
     }
 
