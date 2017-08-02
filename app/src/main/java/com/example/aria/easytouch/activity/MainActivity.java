@@ -1,20 +1,17 @@
 package com.example.aria.easytouch.activity;
 
 import android.Manifest;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
-import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +24,6 @@ import android.widget.Toast;
 
 import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.service.EasyTouchService;
-import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
@@ -83,23 +79,11 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.setting_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_commend:
-                Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.menu_settings:
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                startActivity(intent);
-                break;
-
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -108,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         setSupportActionBar(toolbar);
 
     }
+
 
     private void initListener(){
         switchView.setOnSwitchStateChangeListener(new ShSwitchView.OnSwitchStateChangeListener() {
@@ -277,6 +262,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     public void onPermissionsDenied(int requestCode, List<String> perms) {
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

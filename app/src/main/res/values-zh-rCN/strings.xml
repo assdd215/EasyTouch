@@ -13,6 +13,7 @@
     <string name="menu_home">主页</string>
     <string name="menu_boost">一键加速</string>
     <string name="menu_commend">评论</string>
+    <string name="menu_privacy">声明</string>
 
     <string-array name="commonly_used_apps">
         <item>@string/qq_package</item>
