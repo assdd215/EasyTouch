@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                 return false;
             }
         }else if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED){
+            Log.d("MainActivity","ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED");
             showAppSettingDialog();
             return false;
         }else {

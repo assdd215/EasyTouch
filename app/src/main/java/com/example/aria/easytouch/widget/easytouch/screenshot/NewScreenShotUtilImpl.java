@@ -139,7 +139,7 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
                 if (startVirtual()) startCapture();
                 onScreenshotEventListener.afterScreenshot();
             }
-        },10);
+        },50);
     }
 
     @Override
