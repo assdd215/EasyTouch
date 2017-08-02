@@ -161,11 +161,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         }
 
         model = new FloatMenuItem();
-        model.setIconId(R.drawable.menu_blutooth_off);
+        model.setIconId(R.drawable.menu_wifi_off);
         model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(String.valueOf(R.string.menu_bluetooth));
+        model.setItemTitleId(String.valueOf(R.string.menu_wifi));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_bluetooth), context.getResources().getDrawable(R.drawable.menu_blutooth_off), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_wifi), context.getResources().getDrawable(R.drawable.menu_wifi_off), functionItemListener);
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_wifi_off);
