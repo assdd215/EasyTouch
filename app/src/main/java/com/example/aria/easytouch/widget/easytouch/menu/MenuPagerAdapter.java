@@ -80,10 +80,12 @@ public class MenuPagerAdapter extends PagerAdapter{
             RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                     RelativeLayout.LayoutParams.MATCH_PARENT);
             layout.setLayoutParams(params1);
+            layout.setTag(pageList.size());
             pageList.add(layout);
 
         }
         RelativeLayout relativeLayout = (RelativeLayout) pageList.get((totalItems - 1) / 9);
+        relativeLayout.setClickable(true);
         relativeLayout.setOnLongClickListener(pageLongClickListener);
         relativeLayout.addView(item,params);
         notifyDataSetChanged();

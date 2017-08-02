@@ -23,7 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
+import com.github.promeg.pinyinhelper.Pinyin;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -47,6 +49,8 @@ public class MyActivity extends AppCompatActivity{
     ImageView imageView;
     @BindView(R.id.testLayout)
     RelativeLayout testLayout;
+    @BindView(R.id.centerImage)
+    ImageView centerImage;
 
 
     @Override
@@ -61,11 +65,20 @@ public class MyActivity extends AppCompatActivity{
             list.add(view);
         }
 
+        Toast.makeText(this, Pinyin.toPinyin("你好"," "),Toast.LENGTH_SHORT).show();
+
+        testLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MyActivity.this,"testLayout click!",Toast.LENGTH_SHORT).show();
+
+            }
+        });
         Log.d("MainActivity","version:"+ Build.BRAND);
 
     }
 
-    @OnClick({R.id.btnClearMemory,R.id.testLayout})
+    @OnClick({R.id.btnClearMemory})
     void onClick(View view){
         switch (view.getId()) {
             case R.id.btnClearMemory:

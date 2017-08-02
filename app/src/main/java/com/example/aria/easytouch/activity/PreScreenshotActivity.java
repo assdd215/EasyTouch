@@ -17,7 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.service.MyService;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;

@@ -22,7 +22,7 @@ import android.util.Size;
 import android.view.Surface;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,4 +14,5 @@ public class Constants {
     public static final String STATE_SCREENSHOT = "STATE_SCREENSHOT";
     public static final int CODE_TURNTO_CAMERA = 10001;
     public static final String TOTALMEMORY = "TOTAL_MEMORY";
+    public static final String TYPE_EMPTY = "TYPE_EMPTY";
 }

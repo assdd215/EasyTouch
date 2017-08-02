@@ -30,7 +30,7 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.util.ShellUtils;
 
 public class OldScreenShotUtilImpl implements ScreenShotUtil{

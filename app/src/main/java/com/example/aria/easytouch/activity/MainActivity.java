@@ -25,31 +25,29 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.BuildConfig;
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.service.EasyTouchService;
 import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
-import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+public class MainActivity extends AppCompatActivity{
 
 
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_PROJECTION_CODE = 2;
     private static final int REQUEST_WRITE_WRITE_EXTERNAL_STORAGE = 3;
+    private static final int REQUEST_PERMISSIONS = 4;
 
-    private String[] screenshotPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission_group.LOCATION};
 
     @BindView(R.id.floatWindowSwitch)
     ShSwitchView switchView;
@@ -69,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         initListener();
         firstStart();
         if (!isSupportScreenshot()) layoutScreenshot.setVisibility(View.GONE);
+        requestPermissions();
     }
 
     private void initView(){
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.setting_menu,menu);
+//        getMenuInflater().inflate(R.menu.setting_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -178,12 +177,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-    }
-
     private void openFloatingWindow(){
             if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
                 ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},REQUEST_CAMERA_CODE);
@@ -272,15 +265,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -308,6 +292,12 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         }
     }
 
+    private void requestPermissions(){
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this,permissions,REQUEST_PERMISSIONS);
+        }
 
+    }
 
 }

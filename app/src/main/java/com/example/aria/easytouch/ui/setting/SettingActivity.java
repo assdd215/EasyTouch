@@ -14,7 +14,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 
 import org.jetbrains.annotations.NotNull;
 

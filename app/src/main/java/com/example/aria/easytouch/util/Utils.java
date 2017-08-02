@@ -12,7 +12,7 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 
 import java.io.DataInputStream;
 import java.io.File;

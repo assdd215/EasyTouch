@@ -18,9 +18,10 @@ import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.model.FloatMenuItem;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.widget.easytouch.boost.BoostUtil;
@@ -45,7 +46,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Aria on 2017/7/21.
@@ -60,6 +63,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private BoostUtil boostUtil;
 
     private List<ResolveInfo> resolveInfos;
+    private Map<String,ResolveInfo> infoMap;
     private PackageManager packageManager;
     private Gson gson;
     private List<FloatMenuItem> itemList;
@@ -67,32 +71,26 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            List<ItemModel> itemModels;
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)){
                 switch (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,0)){
                     case BluetoothAdapter.STATE_ON:
-                        if (mainView.findViewByTitle(context.getString(R.string.menu_bluetooth))!= null)
-                        mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
-                                getImageView().setImageResource(R.drawable.menu_blutooth_on);
+                        changeItemIcon(context.getString(R.string.menu_bluetooth),R.drawable.menu_blutooth_on);
                         break;
                     case BluetoothAdapter.STATE_OFF:
-                        if (mainView.findViewByTitle(context.getString(R.string.menu_bluetooth))!= null)
-                        mainView.findViewByTitle(context.getString(R.string.menu_bluetooth))
-                                .getImageView().setImageResource(R.drawable.menu_blutooth_off);
+                        changeItemIcon(context.getString(R.string.menu_bluetooth),R.drawable.menu_blutooth_off);
                         break;
                 }
             }
 
             if (intent.getAction().equals(WifiManager.WIFI_STATE_CHANGED_ACTION)){
                 switch (intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE,0)){
+
                     case WifiManager.WIFI_STATE_DISABLED:
-                        if (mainView.findViewByTitle(context.getString(R.string.menu_wifi))!= null)
-                        mainView.findViewByTitle(context.getString(R.string.menu_wifi))
-                                .getImageView().setImageResource(R.drawable.menu_wifi_off);
+                        changeItemIcon(context.getString(R.string.menu_wifi),R.drawable.menu_wifi_off);
                         break;
                     case WifiManager.WIFI_STATE_ENABLED:
-                        if (mainView.findViewByTitle(context.getString(R.string.menu_wifi))!= null)
-                        mainView.findViewByTitle(context.getString(R.string.menu_wifi))
-                                .getImageView().setImageResource(R.drawable.menu_wifi_on);
+                        changeItemIcon(context.getString(R.string.menu_wifi),R.drawable.menu_wifi_on);
                         break;
                 }
             }
@@ -122,6 +120,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         editor.apply();
         gson = new Gson();
         itemList = new ArrayList<>();
+        infoMap = new HashMap<>();
     }
 
     private List<FloatMenuItem> initMenuItems(){
@@ -216,10 +215,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         resolveInfos = packageManager.queryIntentActivities(intent,0);
         mainView.clearItems();
+        infoMap.clear();
 
         String filePath = FileUtil.getItemJsonFileName(context);
         File file = new File(filePath);
-        FileReader reader = null;
+        FileReader reader;
         try {
             if (!file.exists()){
                 itemList = initMenuItems();
@@ -242,9 +242,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 bufferedReader.close();
                 reader.close();
                 itemList =  gson.fromJson(builder.toString(),new TypeToken<ArrayList<FloatMenuItem>>(){}.getType());
-                setMenuItems(itemList);
-
+                if (itemList != null)
+                    setMenuItems(itemList);
             }
+
+            mainView.fillItems();
         }catch (Exception e){e.printStackTrace();}
 
         updateMenuIcons();
@@ -268,11 +270,13 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         }catch (Exception e){e.printStackTrace();}
         finally {
             try {
+                if (bufferedWriter != null)
                 bufferedWriter.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             try {
+                if (writer != null)
                 writer.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -284,19 +288,19 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private void setMenuItems(List<FloatMenuItem> modelList){
         for (FloatMenuItem item:modelList){
             switch (item.getType()){
-
                 case FloatMenuItem.TYPE_FUNCTION:
                     mainView.addMenuItem(context.getString(Integer.parseInt(item.getItemTitleId())),context.getResources().getDrawable(item.getIconId()),functionItemListener);
                     break;
                 case FloatMenuItem.TYPE_SHORTCUT:
                     for (ResolveInfo info: resolveInfos){
-                        if (info.activityInfo.packageName.equals(item.getTitleName())){
+                        if (info.activityInfo.packageName.equals(item.getItemTitleId())){
                             addCommonlyApp(info);
                             break;
                         }
                     }
                     break;
                 case FloatMenuItem.TYPE_EMPTY:
+                    mainView.addEmptyItem();
                     break;
                 default:
                     break;
@@ -322,6 +326,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     }
 
     private void addCommonlyApp(ResolveInfo info){
+        infoMap.put(info.activityInfo.packageName,info);
         final String packageName = info.activityInfo.packageName;
         final String lauchName = info.activityInfo.name;
         mainView.addMenuItem(info.loadLabel(packageManager).toString(), info.loadIcon(packageManager), new View.OnClickListener() {
@@ -354,46 +359,32 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
     public void onDestory(){
         context.unregisterReceiver(customReceiver);
+        mainView.setDeleteVisible(false);
     }
 
     public void updateMenuIcons(){
         //检测wifi
-
-        if (mainView.findViewByTitle(context.getString(R.string.menu_wifi)) != null){
             WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             if (wifiManager.getWifiState() == WifiManager.WIFI_STATE_ENABLED){
-                mainView.findViewByTitle(context.getString(R.string.menu_wifi)).
-                        getImageView().setImageResource(R.drawable.menu_wifi_on);
+                changeItemIcon(context.getString(R.string.menu_wifi),R.drawable.menu_wifi_on);
             }else {
-                mainView.findViewByTitle(context.getString(R.string.menu_wifi)).
-                        getImageView().setImageResource(R.drawable.menu_wifi_off);
+                changeItemIcon(context.getString(R.string.menu_wifi),R.drawable.menu_wifi_off);
             }
-        }
 
         //检测蓝牙
-        if (mainView.findViewByTitle(context.getString(R.string.menu_bluetooth))!= null){
             BluetoothAdapter bluetoothAdapter = getBltAdapter();
             if (bluetoothAdapter == null)return;
             if (bluetoothAdapter.isEnabled()){
-                mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
-                        getImageView().setImageResource(R.drawable.menu_blutooth_on);
+                changeItemIcon(context.getString(R.string.menu_bluetooth),R.drawable.menu_blutooth_on);
             }else {
-                mainView.findViewByTitle(context.getString(R.string.menu_bluetooth)).
-                        getImageView().setImageResource(R.drawable.menu_blutooth_off);
+                changeItemIcon(context.getString(R.string.menu_bluetooth),R.drawable.menu_blutooth_off);
             }
-        }
 
-        if (mainView.findViewByTitle(context.getString(R.string.menu_light)) != null){
             //检测手电筒
             if (cameraUtil.getOpenCamera())
-                mainView.findViewByTitle(context.getString(R.string.menu_light)).
-                        getImageView().setImageResource(R.drawable.menu_flashlight_on);
-            else mainView.findViewByTitle(context.getString(R.string.menu_light)).
-                    getImageView().setImageResource(R.drawable.menu_flashlight_off);
-        }
-
-
-
+                changeItemIcon(context.getString(R.string.menu_light),R.drawable.menu_flashlight_on);
+            else
+                changeItemIcon(context.getString(R.string.menu_light),R.drawable.menu_flashlight_off);
     }
 
     private BluetoothAdapter getBltAdapter(){
@@ -408,6 +399,14 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
     public View getMainView() {
         return mainView.getMainView();
+    }
+
+    private void changeItemIcon(String itemTitle,int iconId){
+        if (mainView == null)return;
+        List<ItemModel> itemModels = mainView.findModelsByTitle(itemTitle);
+        for (ItemModel item:itemModels){
+            item.getImageView().setImageResource(iconId);
+        }
     }
 
     public void setOnMenuHolderEventListener(OnMenuHolderEventListener onMenuHolderEventListener) {
@@ -425,8 +424,34 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
     }
 
-    private void showDeleteButtons(){
+    @Override
+    public void onDeleteIconClick(View view) {
 
+        Log.d("MainActivity","onDelete");
+        String tag = (String) view.getTag();
+        for (int i=0;i<itemList.size();i++){
+            Log.d("MainActivity","getItemTItle:"+getItemTitle(i));
+            if (getItemTitle(i).equals(tag)){
+                FloatMenuItem item = itemList.get(i);
+                item.setType(FloatMenuItem.TYPE_EMPTY);
+                item.setItemTitleId("");
+                item.setIconId(R.drawable.menu_add);
+            }
+        }
+
+    }
+
+    private String getItemTitle(int position){
+        FloatMenuItem item = itemList.get(position);
+        switch (item.getType()){
+            case FloatMenuItem.TYPE_FUNCTION:
+                return context.getString(Integer.parseInt(item.getItemTitleId()));
+            case FloatMenuItem.TYPE_SHORTCUT:
+                ResolveInfo info = infoMap.get(item.getItemTitleId());
+                return info.loadLabel(packageManager).toString();
+            default:
+                return "";
+        }
     }
 
     private View.OnClickListener functionItemListener = new View.OnClickListener() {
@@ -434,8 +459,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         public void onClick(View v) {
 
             String tag = (String) v.getTag();
-            Toast.makeText(context,tag + "   "+v.isClickable(),Toast.LENGTH_SHORT).show();
-            Log.d("MainActivity",v.toString());
             if (tag.equals(context.getString(R.string.menu_tel))){
                 onTelClick(v);
 
@@ -553,11 +576,11 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         if (ContextCompat.checkSelfPermission(context,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
             Toast.makeText(context,context.getString(R.string.msg_without_camera_permission),Toast.LENGTH_SHORT).show();
         }else cameraUtil.turnOnLight();
-        if (cameraUtil.getOpenCamera())
-            mainView.findViewByTitle(context.getString(R.string.menu_light)).
-                    getImageView().setImageResource(R.drawable.menu_flashlight_on);
-        else mainView.findViewByTitle(context.getString(R.string.menu_light)).getImageView()
-                .setImageResource(R.drawable.menu_flashlight_off);
+        if (cameraUtil.getOpenCamera()){
+            changeItemIcon(context.getString(R.string.menu_light),R.drawable.menu_flashlight_on);
+        }
+        else
+            changeItemIcon(context.getString(R.string.menu_light),R.drawable.menu_flashlight_off);
         onMenuHolderEventListener.afterItemClick(v);
     }
 

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.aria.easytouch.R;
+import com.assistivetool.booster.easytouch.R;
 
 import java.util.List;
 
@@ -55,7 +55,7 @@ public class MemoryBoostUtil implements BoostUtil {
             int pid = processInfo.pid;
             String pName = processInfo.processName;
 
-            if (pName.equals("com.example.aria.easytouch")) {// kill other accept own package
+            if (pName.equals("com.assistivetool.booster.easytouch")) {// kill other accept own package
                 continue;
             }
 

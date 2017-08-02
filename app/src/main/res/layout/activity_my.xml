@@ -26,6 +26,13 @@
         android:layout_height="match_parent"
         android:background="@color/colorAccent"
         android:layout_below="@+id/image"
-        android:id="@+id/testLayout"/>
+        android:id="@+id/testLayout">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@color/colorCommonBackground"
+            android:id="@+id/centerImage"/>
+    </RelativeLayout>
 
 </RelativeLayout>
