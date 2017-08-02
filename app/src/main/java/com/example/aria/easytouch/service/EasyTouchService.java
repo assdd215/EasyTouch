@@ -63,6 +63,12 @@ public class EasyTouchService extends Service{
             if (Constants.STOP_SERVICE.equals(intent.getAction())) {
                 stopSelf();
             }
+            if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(intent.getAction())){
+                Log.d("MainActivity","Home Click!");
+                try {
+                    addIconView();
+                }catch (Exception e){e.printStackTrace();}
+            }
         }
     };
 
@@ -102,6 +108,7 @@ public class EasyTouchService extends Service{
     private void initReceiver(){
         IntentFilter filter = new IntentFilter();
         filter.addAction(Constants.STOP_SERVICE);
+        filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         registerReceiver(serviceReceiver,filter);
     }
 
