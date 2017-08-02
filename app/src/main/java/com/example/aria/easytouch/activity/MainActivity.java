@@ -31,13 +31,15 @@ import com.example.aria.easytouch.ui.setting.SettingActivity;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
+import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
 import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -84,29 +86,38 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.setting_menu,menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_commend:
-                Toast.makeText(MainActivity.this,"commend is click",Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.menu_settings:
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                startActivity(intent);
-                break;
-
-        }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean deleteItemInfo(){
+        File file = new File(FileUtil.getItemJsonFileName(MainActivity.this));
+        if (file.isFile() && file.exists())
+            return file.delete();
+        return false;
     }
 
     private void initToolbar(){
         toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_more));
-        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.setting_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_reset:
+                        if (deleteItemInfo()){
+                            Toast.makeText(MainActivity.this,"删除成功！",Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
+                        }
+                }
+                return false;
+            }
+        });
 
     }
 
@@ -188,7 +199,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public boolean checkFloatWindowPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //23后的悬浮窗权限属于危险权限 需要手动开启
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //23后的悬浮窗权限属于危险权限 需要手动开启
             if(!Settings.canDrawOverlays(this)) {
                 Log.d("MainActivity","!Settings.canDrawOverlays(this)");
                 showAppSettingDialog();

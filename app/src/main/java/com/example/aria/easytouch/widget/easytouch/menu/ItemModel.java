@@ -4,16 +4,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.aria.easytouch.model.FloatMenuItem;
+
 /**
  * Created by Aria on 2017/7/21.
  */
 
 public class ItemModel {
-
-    public static final int TYPE_SHORTCUT = 0;
-    public static final int TYPE_FUNCTION = 1;
-    public static final int TYPE_EMPTY = 2;
-
     private ImageView imageView;
     private RelativeLayout itemLayout;
     private String itemTitle;
@@ -26,6 +23,15 @@ public class ItemModel {
         this.itemLayout = itemLayout;
         this.itemTitle = itemTitle;
         this.position = position;
+        this.type = FloatMenuItem.TYPE_EMPTY;
+    }
+
+    public ItemModel(ImageView imageView,RelativeLayout itemLayout,String  itemTitle,int position,int type){
+        this.imageView = imageView;
+        this.itemLayout = itemLayout;
+        this.itemTitle = itemTitle;
+        this.position = position;
+        this.type = type;
     }
 
     public ItemModel(){}

@@ -41,18 +41,15 @@
 
         <activity android:name="com.example.aria.easytouch.ui.setting.SettingActivity"/>
 
-        <activity android:name="com.example.aria.easytouch.activity.PreScreenshotActivity"/>
-
         <activity android:name="com.example.aria.easytouch.activity.MyActivity">
-            <!--<intent-filt -->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <service android:name="com.example.aria.easytouch.service.EasyTouchService" />
-
-        <service android:name="com.example.aria.easytouch.service.MyService"/>
-
-        <service android:name="com.example.aria.easytouch.service.MyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <receiver android:name="com.example.aria.easytouch.broadcast.BootCompleteReceiver">
             <intent-filter>

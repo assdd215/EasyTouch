@@ -2,15 +2,18 @@ package com.example.aria.easytouch.widget.easytouch.menu;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.assistivetool.booster.easytouch.R;
+import com.example.aria.easytouch.model.FloatMenuItem;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
@@ -23,8 +26,6 @@ import java.util.List;
  */
 
 public class MainView {
-
-    public static final int ITEM_POSITION = 100;
 
     private Context context;
     private RelativeLayout baseLayout;
@@ -52,18 +53,25 @@ public class MainView {
 
     private void showDeleteButtons(){
         for (ItemModel itemModel:itemModelList) {
-            String tag = (String) itemModel.getItemLayout().getTag();
-            if (Constants.TYPE_EMPTY.equals(tag)){
-                itemModel.getImageView().setImageResource(R.drawable.menu_add);
-                itemModel.getImageView().setVisibility(View.VISIBLE);
-                itemModel.getItemLayout().setClickable(true);
-            }else {
-                itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.VISIBLE);
-                itemModel.getItemLayout().setClickable(false);
-                itemModel.getItemLayout().findViewById(R.id.titleView).setClickable(false);
-                itemModel.getItemLayout().findViewById(R.id.iconView).setClickable(false);
+            switch (itemModel.getType()){
+                case FloatMenuItem.TYPE_EMPTY:
+                    itemModel.getImageView().setImageResource(R.drawable.menu_add);
+                    itemModel.getImageView().setVisibility(View.VISIBLE);
+                    itemModel.getItemLayout().setClickable(true);
+                    break;
+//                case FloatMenuItem.TYPE_FUNCTION:
+                case FloatMenuItem.TYPE_FUNCTION:
+                    itemModel.getItemLayout().setClickable(false);
+                    itemModel.getItemLayout().findViewById(R.id.titleView).setClickable(false);
+                    itemModel.getItemLayout().findViewById(R.id.iconView).setClickable(false);
+                    break;
+                case FloatMenuItem.TYPE_SHORTCUT:
+                    itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.VISIBLE);
+                    itemModel.getItemLayout().setClickable(false);
+                    itemModel.getItemLayout().findViewById(R.id.titleView).setClickable(false);
+                    itemModel.getItemLayout().findViewById(R.id.iconView).setClickable(false);
+                    break;
             }
-
         }
         deleteVisible = true;
     }
@@ -74,15 +82,20 @@ public class MainView {
 
     public void  hideDeleteButtons(){
         for (ItemModel itemModel:itemModelList) {
-            String tag = (String) itemModel.getItemLayout().getTag();
-            if (Constants.TYPE_EMPTY.equals(tag)){
+            switch (itemModel.getType()){
+                case FloatMenuItem.TYPE_EMPTY:
                 itemModel.getImageView().setVisibility(View.INVISIBLE);
                 itemModel.getItemLayout().setClickable(false);
-            }else {
-                itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.GONE);
-                itemModel.getItemLayout().setClickable(true);
+                    break;
+//                case FloatMenuItem.TYPE_FUNCTION:
+                case FloatMenuItem.TYPE_FUNCTION:
+                    itemModel.getItemLayout().setClickable(true);
+                    break;
+                case FloatMenuItem.TYPE_SHORTCUT:
+                    itemModel.getItemLayout().findViewById(R.id.deleteIcon).setVisibility(View.GONE);
+                    itemModel.getItemLayout().setClickable(true);
+                    break;
             }
-
         }
         deleteVisible = false;
     }
@@ -112,7 +125,7 @@ public class MainView {
         viewPager.setAdapter(menuPagerAdapter);
         viewPager.setOffscreenPageLimit(2);
 
-        menuLayout = new MenuLayout(context);
+        menuLayout = new RelativeLayout(context);
         RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,270),Utils.dip2px(context,270));
         menuParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         menuLayout.setLayoutParams(menuParams);
@@ -126,12 +139,8 @@ public class MainView {
         return baseLayout;
     }
 
-//    public boolean addMenuItem(String itemTitle, Drawable icon){
-//        return addMenuItem(itemTitle,icon,null);
-//
-//    }
 
-    public boolean addMenuItem(String itemTitle, Drawable icon, View.OnClickListener onClickListener){
+    public boolean addMenuItem(String itemTitle, Drawable icon, View.OnClickListener onClickListener,int type){
         boolean flag = true;
         MenuLayout itemLayout = (MenuLayout) LayoutInflater.from(context).inflate(R.layout.float_menu_item,null);
         ImageView iconView = (ImageView) itemLayout.findViewById(R.id.iconView);
@@ -160,6 +169,7 @@ public class MainView {
                 for (ItemModel itemModel:itemModelList){
                     if (itemModel.getItemLayout() == relativeLayout){
                         itemModel.setItemTitle(Constants.TYPE_EMPTY + relativeLayout.getId());
+                        itemModel.setType(FloatMenuItem.TYPE_EMPTY);
                         break;
                     }
                 }
@@ -169,7 +179,7 @@ public class MainView {
         RelativeLayout.LayoutParams itemLayoutParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,72),Utils.dip2px(context,72));
         setItemPosition(itemLayoutParams,itemModelList.size()%9);
         menuPagerAdapter.addItem(itemLayout,itemLayoutParams);
-        itemModelList.add(new ItemModel(iconView,itemLayout,itemTitle,itemModelList.size()));
+        itemModelList.add(new ItemModel(iconView,itemLayout,itemTitle,itemModelList.size(), type));
         return flag;
     }
 
@@ -186,7 +196,9 @@ public class MainView {
         itemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context,"这里要写一下添加APP",Toast.LENGTH_SHORT).show();
+                //TODO 点击后展示添加应用的窗口，示例代码参考MyActivity
+
+
             }
         });
         itemLayout.setClickable(false);

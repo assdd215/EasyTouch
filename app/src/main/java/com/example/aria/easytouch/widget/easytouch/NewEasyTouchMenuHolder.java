@@ -71,7 +71,6 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     private BroadcastReceiver customReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            List<ItemModel> itemModels;
             if (intent.getAction().equals(BluetoothAdapter.ACTION_STATE_CHANGED)){
                 switch (intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,0)){
                     case BluetoothAdapter.STATE_ON:
@@ -131,80 +130,79 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_tel);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_tel));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_tel), context.getResources().getDrawable(R.drawable.menu_tel), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_tel), context.getResources().getDrawable(R.drawable.menu_tel), functionItemListener,model.getType());
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_message);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_message));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_message), context.getResources().getDrawable(R.drawable.menu_message), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_message), context.getResources().getDrawable(R.drawable.menu_message), functionItemListener,model.getType());
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_camera);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_camera));
         modelList.add(model);
-        mainView.addMenuItem(String.valueOf(context.getString(R.string.menu_camera)), context.getResources().getDrawable(R.drawable.menu_camera), functionItemListener);
+        mainView.addMenuItem(String.valueOf(context.getString(R.string.menu_camera)), context.getResources().getDrawable(R.drawable.menu_camera), functionItemListener,model.getType());
 
 
         if (screenShotUtil.isSupportScreenshot()){
             model = new FloatMenuItem();
             model.setIconId(R.drawable.menu_cut_enable);
-            model.setType(ItemModel.TYPE_FUNCTION);
+            model.setType(FloatMenuItem.TYPE_FUNCTION);
             model.setItemTitleId(String.valueOf(R.string.menu_screenshot));
             modelList.add(model);
-            mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), functionItemListener);
+            mainView.addMenuItem(context.getString(R.string.menu_screenshot), context.getResources().getDrawable(R.drawable.menu_cut_enable), functionItemListener,model.getType());
         }
 
         model = new FloatMenuItem();
-        model.setIconId(R.drawable.menu_wifi_off);
-        model.setType(ItemModel.TYPE_FUNCTION);
-        model.setItemTitleId(String.valueOf(R.string.menu_wifi));
+        model.setIconId(R.drawable.menu_blutooth_off);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
+        model.setItemTitleId(String.valueOf(R.string.menu_bluetooth));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_wifi), context.getResources().getDrawable(R.drawable.menu_wifi_off), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_bluetooth), context.getResources().getDrawable(R.drawable.menu_blutooth_off), functionItemListener,model.getType());
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_wifi_off);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_wifi));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_wifi), context.getResources().getDrawable(R.drawable.menu_wifi_off), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_wifi), context.getResources().getDrawable(R.drawable.menu_wifi_off), functionItemListener,model.getType());
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_browser);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_search));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_search), context.getResources().getDrawable(R.drawable.menu_browser), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_search), context.getResources().getDrawable(R.drawable.menu_browser), functionItemListener,model.getType());
 
         if (cameraUtil.isSupportFlash()){
             model = new FloatMenuItem();
             model.setIconId(R.drawable.menu_flashlight_off);
-            model.setType(ItemModel.TYPE_FUNCTION);
+            model.setType(FloatMenuItem.TYPE_FUNCTION);
             model.setItemTitleId(String.valueOf(R.string.menu_light));
             modelList.add(model);
-            mainView.addMenuItem(context.getString(R.string.menu_light), context.getResources().getDrawable(R.drawable.menu_flashlight_off), functionItemListener);
+            mainView.addMenuItem(context.getString(R.string.menu_light), context.getResources().getDrawable(R.drawable.menu_flashlight_off), functionItemListener,model.getType());
         }
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_home);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_home));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_home), context.getResources().getDrawable(R.drawable.menu_home), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_home), context.getResources().getDrawable(R.drawable.menu_home), functionItemListener,model.getType());
 
         model = new FloatMenuItem();
         model.setIconId(R.drawable.menu_boost);
-        model.setType(ItemModel.TYPE_FUNCTION);
+        model.setType(FloatMenuItem.TYPE_FUNCTION);
         model.setItemTitleId(String.valueOf(R.string.menu_boost));
         modelList.add(model);
-        mainView.addMenuItem(context.getString(R.string.menu_boost), context.getResources().getDrawable(R.drawable.menu_boost), functionItemListener);
+        mainView.addMenuItem(context.getString(R.string.menu_boost), context.getResources().getDrawable(R.drawable.menu_boost), functionItemListener,model.getType());
 
-//        addCommonlyApps();
         initCommonlyApps(modelList);
         return modelList;
     }
@@ -289,7 +287,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         for (FloatMenuItem item:modelList){
             switch (item.getType()){
                 case FloatMenuItem.TYPE_FUNCTION:
-                    mainView.addMenuItem(context.getString(Integer.parseInt(item.getItemTitleId())),context.getResources().getDrawable(item.getIconId()),functionItemListener);
+                    mainView.addMenuItem(context.getString(Integer.parseInt(item.getItemTitleId())),context.getResources().getDrawable(item.getIconId()),functionItemListener,FloatMenuItem.TYPE_FUNCTION);
                     break;
                 case FloatMenuItem.TYPE_SHORTCUT:
                     for (ResolveInfo info: resolveInfos){
@@ -342,7 +340,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
                 onMenuHolderEventListener.afterItemClick(v);
                 context.startActivity(intent1);
             }
-        });
+        },FloatMenuItem.TYPE_SHORTCUT);
     }
 
     private void initReceiver(){

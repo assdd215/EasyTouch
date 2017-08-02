@@ -5,9 +5,12 @@
         android:id="@+id/menu_commend"
         android:icon="@drawable/icon_commend"
         android:title="@string/menu_commend"
-        app:showAsAction="always"/>
+        app:showAsAction="always"
+        android:visible="false"/>
     <item android:id="@+id/menu_settings"
         android:title="@string/btn_setting"
         app:showAsAction="never"
-        android:visible="false"/>
+        android:visible="false" />
+    <item android:title="reset"
+        android:id="@+id/menu_reset"/>
 </menu>

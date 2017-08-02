@@ -26,7 +26,8 @@
         android:layout_height="match_parent"
         android:background="@color/colorAccent"
         android:layout_below="@+id/image"
-        android:id="@+id/testLayout">
+        android:id="@+id/testLayout"
+        android:visibility="gone">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -34,5 +35,18 @@
             android:background="@color/colorCommonBackground"
             android:id="@+id/centerImage"/>
     </RelativeLayout>
+
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_below="@id/btnClearMemory"-->
+        <!--android:scrollbars="vertical"-->
+        <!--android:background="@color/colorPrimary">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="400dp"-->
+            <!--android:orientation="vertical">-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
 </RelativeLayout>

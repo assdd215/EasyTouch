@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.aria.easytouch.widget.easytouch.menu.MenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="72dp"
-    android:layout_height="72dp">
+     android:layout_width="75dp"
+    android:layout_height="75dp">
     <ImageView
         android:layout_width="32dp"
         android:layout_height="32dp"
