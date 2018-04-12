@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#af000000">
+
+    <TextView
+        android:id="@+id/hint_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="测试用"
+        android:gravity="left"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:paddingLeft="50dp"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"/>
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_IKnow"
+        android:id="@+id/btnHint"
+        android:layout_marginRight="50dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/drawable_hint_btn"
+        android:layout_marginTop="47dp"
+        android:padding="10dp"
+        android:layout_below="@+id/hint_title"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="50dp" />
+
+
+</RelativeLayout>

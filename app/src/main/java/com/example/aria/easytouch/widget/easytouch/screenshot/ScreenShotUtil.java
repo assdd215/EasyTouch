@@ -11,4 +11,5 @@ public interface ScreenShotUtil {
     void startScreenshot();
     boolean isSupportScreenshot();
     void setHandler(Handler handler);
+    void onDestroy();
 }

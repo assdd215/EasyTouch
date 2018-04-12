@@ -13,7 +13,6 @@
     <string name="menu_home">Home</string>
     <string name="menu_boost">Boost</string>
     <string name="menu_commend">Commend</string>
-    <string name="menu_privacy">statement</string>
 
 
 
@@ -21,11 +20,19 @@
         <item>@string/qq_package</item>
         <item>@string/wechat_package</item>
         <item>@string/netEase_music_package</item>
+        <item>@string/bilibili_package</item>
+        <item>@string/weibo_package</item>
+        <item>@string/zhihu_package</item>
+        <item>@string/baiduMap_package</item>
     </string-array>
 
     <string name="qq_package">com.tencent.mobileqq</string>
     <string name="wechat_package">com.tencent.mm</string>
     <string name="netEase_music_package">com.netease.cloudmusic</string>
+    <string name="bilibili_package">tv.danmaku.bili</string>
+    <string name="weibo_package">com.sina.weibo</string>
+    <string name="zhihu_package">com.zhihu.android</string>
+    <string name="baiduMap_package">com.baidu.BaiduMap</string>
 
     <string name="setting_openFloatingWindow">Open FloatingWindow</string>
     <string name="setting_openScreenshot">Open ScreenShot</string>
@@ -49,7 +56,8 @@
     <string name="msg_reOpen_screenshot">Please re-open the screenshot function!</string>
     <string name="msg_without_root_screenshot">You do not have the ROOT!Please open the ROOT and try screenshot function again!</string>
     <string name="msg_screenshot_success">Screenshot sucess!Picture saved in </string>
-    <string name="msg_screenshot_fail">Screenshot failed! Please check whether the file permissions are turned on and re-open the screenshot function to try again!</string>
+    <string name="msg_screen_fail">Screenshot fail！</string>
+    <string name="msg_screenshot_fail">Screenshot failed! Please check whether the file permissions are turned on!</string>
     <string name="msg_memory_cleared">Boost done! The system is clean!</string>
     <string name="msg_memory_clear_with_number">Boost done! Has cleaned memory</string>
     <string name="toast_after_goto_float_window_permission">Please find EasyTouch in the Management interface and open the "display pop-up window" permission!</string>
@@ -59,4 +67,12 @@
     <string name="brand_xiaomi">Xiaomi</string>
     <string name="brand_nexus">google</string>
 
+    <string name="hint_open_accessibility">1.Click \"Accessibility\" \n2.Please find and active \" %1$s \"</string>
+    <string name="msg_accessibility_description">Tap the switch at the top-right corner.\nAfter tapping，the system will send a notice warning you about your personal information.
+        Please be assured that EasyTouch will not collect any personal information.</string>
+    <string name="text_IKnow">I Know</string>
+    <string name="hint_open_float_window">1.Find and enter \"EasyTouch\". \n2.Find and active \"Permit drawing over other apps\"</string>
+
+    <string name="INSTALL">install</string>
+    <string name="NEXT">next</string>
 </resources>

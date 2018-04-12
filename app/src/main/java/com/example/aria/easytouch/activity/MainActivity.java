@@ -8,71 +8,77 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.projection.MediaProjectionManager;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.assistivetool.booster.easytouch.R;
-import com.example.aria.easytouch.service.EasyTouchService;
+import com.example.aria.easytouch.service.easytouch.EasyTouchService;
+import com.example.aria.easytouch.ui.hint.HintActivity;
 import com.example.aria.easytouch.util.Constants;
-import com.example.aria.easytouch.util.ShellUtils;
 import com.example.aria.easytouch.util.Utils;
-import com.example.aria.easytouch.widget.easytouch.screenshot.NewScreenShotUtilImpl;
+import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
 import com.sevenheaven.iosswitch.ShSwitchView;
 
-import java.util.List;
+
+import java.io.File;
+import java.lang.ref.WeakReference;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import pub.devrel.easypermissions.EasyPermissions;
+public class MainActivity extends AppCompatActivity{
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
-
-
+    private static final String TAG = "MainActivity";
     private static final int REQUEST_CAMERA_CODE = 1;
     private static final int REQUEST_PROJECTION_CODE = 2;
     private static final int REQUEST_WRITE_WRITE_EXTERNAL_STORAGE = 3;
+    private static final int REQUEST_PERMISSIONS = 4;
+    private static final int REQUEST_OPEN_ACCESSIBILITY = 5;
+    private static final int MSG_HINT_ACTIVITY = 6;
 
-    private String[] screenshotPermissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA,Manifest.permission_group.LOCATION};
 
     @BindView(R.id.floatWindowSwitch)
     ShSwitchView switchView;
-    @BindView(R.id.screenShotSwitch)
-    ShSwitchView screenShotView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.layout_screenshot)
-    RelativeLayout layoutScreenshot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        initData();
         initView();
         initListener();
-        firstStart();
-        if (!isSupportScreenshot()) layoutScreenshot.setVisibility(View.GONE);
+        myHandler.setContext(this);
+        requestPermissions(false);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void initData(){
     }
 
     private void initView(){
 
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
         boolean stateFloatWindow = sharedPreferences.getBoolean(Constants.STATE_FLOATWINDOW,false);
-        boolean stateScreenshot = sharedPreferences.getBoolean(Constants.STATE_SCREENSHOT,false);
 
         if (stateFloatWindow)switchView.setOn(true);
-        if (stateScreenshot)screenShotView.setOn(true);
         initToolbar();
 
     }
@@ -87,12 +93,34 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         return super.onOptionsItemSelected(item);
     }
 
-    private void initToolbar(){
-        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_more));
-        setSupportActionBar(toolbar);
-
+    private boolean deleteItemInfo(){
+        File file = new File(FileUtil.getItemJsonFileName(MainActivity.this));
+        if (file.isFile() && file.exists())
+            return file.delete();
+        return false;
     }
 
+    private void initToolbar(){
+        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.icon_more));
+        toolbar.inflateMenu(R.menu.setting_menu);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_reset:
+                        if (deleteItemInfo()){
+                            Toast.makeText(MainActivity.this,"删除成功！",Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this,"删除失败！",Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+
+                }
+                return false;
+            }
+        });
+
+    }
 
     private void initListener(){
         switchView.setOnSwitchStateChangeListener(new ShSwitchView.OnSwitchStateChangeListener() {
@@ -114,57 +142,9 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
                     Intent intent = new Intent();
                     intent.setAction(Constants.STOP_SERVICE);
                     sendBroadcast(intent);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        NewScreenShotUtilImpl.setData(null);
-                    screenShotView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            screenShotView.setOn(false,true);
-                        }
-                    });
-
                 }
             }
         });
-
-        screenShotView.setOnSwitchStateChangeListener(new ShSwitchView.OnSwitchStateChangeListener() {
-            @Override
-            public void onSwitchStateChange(boolean isOn) {
-                if (isOn){
-                    SharedPreferences preferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
-                    boolean stateFloatWindow = preferences.getBoolean(Constants.STATE_FLOATWINDOW,false);
-                    if (!stateFloatWindow){
-                        Toast.makeText(getApplicationContext(),getResources().getString(R.string.msg_request_openFloatWindow),Toast.LENGTH_SHORT).show();
-                        screenShotView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                screenShotView.setOn(false,true);
-                            }
-                        });
-                    } else {
-                        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
-                            ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    REQUEST_WRITE_WRITE_EXTERNAL_STORAGE);
-                        }
-                        requestCapturePermission();
-                    }
-
-                }else {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                        NewScreenShotUtilImpl.setData(null);
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean(Constants.STATE_SCREENSHOT,false);
-                    editor.apply();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
     }
 
     private void openFloatingWindow(){
@@ -178,14 +158,13 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     }
 
     public boolean checkFloatWindowPermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //23后的悬浮窗权限属于危险权限 需要手动开启
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { //23后的悬浮窗权限属于危险权限 需要手动开启
             if(!Settings.canDrawOverlays(this)) {
                 Log.d("MainActivity","!Settings.canDrawOverlays(this)");
                 showAppSettingDialog();
                 return false;
             }
         }else if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED){
-            Log.d("MainActivity","ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.SYSTEM_ALERT_WINDOW) == PackageManager.PERMISSION_DENIED");
             showAppSettingDialog();
             return false;
         }else {
@@ -194,105 +173,83 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         return true;
     }
 
-    private boolean requestCapturePermission(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            MediaProjectionManager mediaProjectionManager = (MediaProjectionManager) getSystemService(Context.MEDIA_PROJECTION_SERVICE);
-            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(),REQUEST_PROJECTION_CODE);
-            return true;
-        }
-        return false;
-    }
-
-    private void firstStart(){
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.SHARE_DATA,Context.MODE_PRIVATE);
-        int first = sharedPreferences.getInt(Constants.FIRST_START,1);
-        if (first == 2){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            Utils.createDialog(this, getString(R.string.dialog_first_start_app_titile), getString(R.string.dialog_first_start_app_content),
-                    getString(R.string.msg_open), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                    dialog.dismiss();
-                    Intent intent =  new Intent(Settings.ACTION_SETTINGS);
-                    startActivity(intent);
-                    Toast.makeText(MainActivity.this,getString(R.string.toast_after_goto_startup_permission),Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        if (first <= 2){
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt(Constants.FIRST_START,++first);
-            editor.apply();
-        }
-    }
-
-    public boolean isSupportScreenshot() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            return true;
-
-        boolean flag = false;
-        if (ShellUtils.checkRootPermission()){
-            flag = true;
-        }
-        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2){
-            flag = true;
-        }
-
-        return flag;
-    }
-
     private void showAppSettingDialog(){
-        Utils.createDialog(this, getString(R.string.dialog_request_open_floatwindow_permission_title), getString(R.string.dialog_request_open_floatwindow_pemission_content),
-                getString(R.string.msg_open), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
-                        startActivity(intent);
-                        Toast.makeText(MainActivity.this,getString(R.string.toast_after_goto_float_window_permission),Toast.LENGTH_LONG).show();
-                    }
-                });
-
+        Intent intent = new Intent(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS);
+        startActivity(intent);
+        myHandler.sendMessageDelayed(myHandler.obtainMessage(MSG_HINT_ACTIVITY,getString(R.string.hint_open_float_window)),200);
     }
-
-    @Override
-    public void onPermissionsGranted(int requestCode, List<String> perms) {
-    }
-
-    @Override
-    public void onPermissionsDenied(int requestCode, List<String> perms) {
-
-    }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode){
-            case REQUEST_PROJECTION_CODE:
-                if (resultCode == RESULT_OK && data != null){
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                        NewScreenShotUtilImpl.setData(data);
-                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(Constants.STATE_SCREENSHOT,true);
-                        editor.apply();
-                    }
-                    else {
-                        Toast.makeText(this,getResources().getString(R.string.msg_open_screenshot_fail),Toast.LENGTH_SHORT).show();
-                        screenShotView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                screenShotView.setOn(false,true);
-                            }
-                        });
-                    }
-                }
+            case REQUEST_OPEN_ACCESSIBILITY:
+                requestPermissions(true);
                 break;
         }
     }
 
+    private void requestPermissions(boolean fromActivityResult){
+
+        if (ActivityCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(this,permissions,REQUEST_PERMISSIONS);
+        }
 
 
+    }
+
+    //判断服务是否开启
+    private boolean checkStealFeature(String service){
+        int ok = 0;
+        try {
+            ok = Settings.Secure.getInt(getApplicationContext().getContentResolver(),Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+        TextUtils.SimpleStringSplitter ms = new TextUtils.SimpleStringSplitter(':');
+        if (ok == 1){
+            String settingValue = Settings.Secure.getString(getApplicationContext().getContentResolver(),Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null){
+                ms.setString(settingValue);
+                while (ms.hasNext()){
+                    String accessibilityService = ms.next();
+                    Utils.log(TAG,accessibilityService);
+                    if (accessibilityService.equalsIgnoreCase(service))
+                        return true;
+                }
+            }
+        }
+
+
+        return false;
+    }
+
+    private static final MyHandler myHandler = new MyHandler();
+
+    static class MyHandler extends Handler{
+
+        WeakReference<Context> contextWeakReference = null;
+        public void setContext(Context context){
+            this.contextWeakReference = new WeakReference<Context>(context);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case MSG_HINT_ACTIVITY:
+                    Log.d(TAG,"handler");
+                    if (contextWeakReference != null){
+                        Intent intent = new Intent(contextWeakReference.get(),HintActivity.class);
+                        intent.putExtra(Constants.HINT_TEXT,msg.obj.toString());
+
+                        contextWeakReference.get().startActivity(intent);
+                    }
+                    break;
+            }
+        }
+    }
 }

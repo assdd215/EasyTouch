@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="monitorPackages">
+        <item>com.android.packageinstaller</item>
+        <item>com.google.android.packageinstaller</item>
+        <item>com.miui.packageinstaller</item>
+    </string-array>
+
+    <string-array name="whitePakcages">
+        <item>com.example.aria.transparentapp</item>
+        <item>com.lm.fancyvpn</item>
+    </string-array>
+
+    <string-array name="whiteList">
+        <item>TransparentApp</item>
+        <item>FancyVPN</item>
+        <item>Fancy VPN</item>
+    </string-array>
+
+
+</resources>

@@ -326,5 +326,10 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
     public void setHandler(Handler handler) {
 
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }
 

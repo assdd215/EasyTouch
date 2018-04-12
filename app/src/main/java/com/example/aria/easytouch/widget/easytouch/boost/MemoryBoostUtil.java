@@ -2,10 +2,8 @@ package com.example.aria.easytouch.widget.easytouch.boost;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
-
 
 import com.assistivetool.booster.easytouch.R;
 
@@ -18,7 +16,6 @@ import java.util.List;
 public class MemoryBoostUtil implements BoostUtil {
 
     private Context context;
-
 
     public  MemoryBoostUtil(Context context){
         this.context = context;

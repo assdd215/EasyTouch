@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<item-->
-        <!--android:id="@+id/menu_commend"-->
-        <!--android:icon="@drawable/icon_commend"-->
-        <!--android:title="@string/menu_commend"-->
-        <!--app:showAsAction="always"/>-->
-    <!--<item android:id="@+id/menu_settings"-->
-        <!--android:title="@string/btn_setting"-->
-        <!--app:showAsAction="never"-->
-        <!--android:visible="false"/>-->
-    <item android:id="@+id/privacy"
-        app:showAsAction="never"
-        android:title="@string/menu_privacy"/>
+    <item android:title="reset"
+        android:id="@+id/menu_reset"/>
 </menu>

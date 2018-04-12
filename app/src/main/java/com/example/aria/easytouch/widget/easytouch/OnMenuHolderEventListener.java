@@ -9,4 +9,6 @@ import android.view.View;
 public interface OnMenuHolderEventListener {
     void beforeItemPerform(View view);
     void afterItemClick(View view);
+    void onDeleteIconClick(View view);
+    void onEmptyItemClick(View view);
 }

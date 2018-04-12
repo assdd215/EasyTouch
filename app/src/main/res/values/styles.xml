@@ -44,5 +44,34 @@
         <item name="android:layout_width">72dp</item>
         <item name="android:orientation">vertical</item>
     </style>
+    
+    <style name="HintStyle" parent="@android:style/Theme.Translucent.NoTitleBar">
+        <item name="android:windowAnimationStyle">@style/HintStyle.ActivityAnim</item>
+    </style>
+
+    <style name="HintStyle.ActivityAnim">
+        <item name="android:windowEnterAnimation">@anim/anim_hint_enter</item>
+        <item name="android:windowHideAnimation">@anim/anim__hint_exit</item>
+    </style>
+
+    <style name="MyProgressStyle">
+        <item name="android:indeterminateDrawable">@drawable/icon_view</item>
+        <item name="android:maxWidth">50dp</item>
+        <item name="android:maxHeight">50dp</item>
+    </style>
+
+    <style name="TranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@android:color/transparent</item>
+
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorBackground">@android:color/transparent</item>
+    </style>
 
 </resources>

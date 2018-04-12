@@ -1,8 +1,10 @@
 package com.example.aria.easytouch.widget.easytouch.screenshot;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
@@ -23,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.assistivetool.booster.easytouch.R;
+import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
 import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
 
@@ -37,6 +40,8 @@ import java.io.IOException;
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class NewScreenShotUtilImpl implements ScreenShotUtil{
 
+    private static final String TAG = "NewScreenShotUtilImpl";
+
     private Context context;
     private MediaProjection mediaProjection;
     private VirtualDisplay virtualDisplay;
@@ -49,6 +54,22 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
     private ImageReader imageReader;
 
     private OnScreenshotEventListener onScreenshotEventListener;
+
+    private BroadcastReceiver screenshotReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Constants.ACTION_SCREENSHOT)){
+                int result = intent.getIntExtra("result",-99999);
+                if (result == Activity.RESULT_OK){
+                    screenShot();
+                }else {
+                    Toast.makeText(context,context.getString(R.string.msg_screen_fail),Toast.LENGTH_SHORT).show();
+                    onScreenshotEventListener.afterScreenshot();
+                }
+            }
+        }
+    };
+
 
     public NewScreenShotUtilImpl(Context context){
         this.context = context;
@@ -87,6 +108,10 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
 
         };
         imageReader = ImageReader.newInstance(screenWidth,screenHeight, PixelFormat.RGBA_8888,1);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.ACTION_SCREENSHOT);
+        context.registerReceiver(screenshotReceiver,intentFilter);
     }
 
     private boolean startVirtual(){
@@ -107,15 +132,27 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
         Image image = null;
         if (imageReader != null) image = imageReader.acquireLatestImage();
         if (image == null && data!=null){
-            Log.d("MainActivity","startCapture");
+            Log.d(TAG,"startCapture");
             if (data == null)return;
-            startScreenshot();
+            screenShot();
         }else {
             Bitmap bitmap = Utils.image2Bitmap(image);
             SaveTask saveTask = new SaveTask(context,onScreenshotEventListener);
             AsyncTaskCompat.executeParallel(saveTask,bitmap);
             onScreenshotEventListener.onImageCaptured(image);
         }
+    }
+
+    //真正开始截图功能的操作
+    private void screenShot(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (startVirtual()) startCapture();
+                onScreenshotEventListener.afterScreenshot();
+            }
+        },100);
     }
 
     public static void setData(Intent data1) {
@@ -130,16 +167,11 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
 
     @Override
     public void startScreenshot() {
-        Log.d("MainActivity","new screenshot");
+        Log.d(TAG,"new screenshot");
         onScreenshotEventListener.beforeScreenshot();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (startVirtual()) startCapture();
-                onScreenshotEventListener.afterScreenshot();
-            }
-        },50);
+        Intent intent = new Intent(context, BlankActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+        context.startActivity(intent);
     }
 
     @Override
@@ -150,6 +182,11 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
     @Override
     public void setHandler(Handler handler) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        context.unregisterReceiver(screenshotReceiver);
     }
 
 

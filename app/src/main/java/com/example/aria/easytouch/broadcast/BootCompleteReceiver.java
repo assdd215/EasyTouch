@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.aria.easytouch.service.EasyTouchService;
+import com.example.aria.easytouch.service.easytouch.EasyTouchService;
 import com.example.aria.easytouch.util.Constants;
 
 /**
@@ -16,7 +16,6 @@ import com.example.aria.easytouch.util.Constants;
 public class BootCompleteReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("MainActivity","==========================onReceive===========================");
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.SHARE_DATA,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(Constants.STATE_FLOATWINDOW,true);

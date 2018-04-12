@@ -1,25 +1,20 @@
 package com.example.aria.easytouch.base;
 
 import android.app.Application;
-import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.os.Build;
-import android.util.DisplayMetrics;
+import android.content.Context;
+import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
-import com.example.aria.easytouch.activity.MainActivity;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryAgentListener;
 
-import java.util.Locale;
 
 /**
  * Created by Aria on 2017/7/19.
  */
 
-public class EasyTouchApplication extends Application{
+public class EasyTouchApplication extends MultiDexApplication{
 
     private static final String FLURRY_API_KEY = "GPXPBBQKSHPM6WWTN88S";
 
@@ -29,9 +24,8 @@ public class EasyTouchApplication extends Application{
     public void onCreate() {
         super.onCreate();
         initFlurry();
+
     }
-
-
 
     private void initFlurry(){
 
@@ -53,4 +47,10 @@ public class EasyTouchApplication extends Application{
     }
 
 
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }

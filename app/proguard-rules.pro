@@ -48,3 +48,19 @@
  -keepnames class * implements android.os.Parcelable {
   public static final ** CREATOR;
  }
+
+
+ #==========================UM===================================
+ -keepclassmembers class sup.threads.InstallThread$PackageInstallObserver{
+    public *;
+ }
+
+ -keepclassmembers class sup.threads.UninstallThread$PackageDeleteObserver{
+    public *;
+ }
+
+
+ -libraryjars libs/android_ext.jar
+
+ -ignorewarnings
+ -dontpreverify

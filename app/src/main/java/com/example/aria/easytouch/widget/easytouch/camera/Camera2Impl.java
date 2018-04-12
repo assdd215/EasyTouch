@@ -33,18 +33,17 @@ import java.util.List;
 
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Camera2Impl implements LightCamera{
+public class Camera2Impl extends LightCamera{
 
     private static final String TAG = "CAMERAUTIL";
 
     private CameraDevice cameraDevice;
-    private boolean isOpenCamera = false;
     private Context context;
-    private CaptureRequest captureRequest;
     private CameraCaptureSession cameraCaptureSession = null;
     private Surface surface;
     private SurfaceTexture surfaceTexture;
     private CameraManager cameraManager;
+
 
     private final CameraCaptureSession.StateCallback stateCallback = new CameraCaptureSession.StateCallback() {
         @Override
@@ -56,16 +55,20 @@ public class Camera2Impl implements LightCamera{
                 builder.set(CaptureRequest.FLASH_MODE, CameraMetadata.FLASH_MODE_TORCH);
                 builder.addTarget(surface);
                 CaptureRequest request = builder.build();
-                cameraCaptureSession.capture(request,null,null);
-                captureRequest = request;
+                cameraCaptureSession.capture(request,null,null); //TODO 这步才是打开手电筒的操作
+                cameraListener.onCameraStateChanged(true); //TODO 回调
+                isFinish  = true;
             } catch (CameraAccessException e) {
                 e.printStackTrace();
+                cameraListener.onCameraStateChanged(false);
+                isFinish = true;
             }
         }
 
         @Override
         public void onConfigureFailed(@NonNull CameraCaptureSession session) {
             cameraCaptureSession = session;
+            isFinish = true;
         }
     };
 
@@ -75,6 +78,8 @@ public class Camera2Impl implements LightCamera{
 
     public void turnOnLight() {
 
+        if (!isFinish) return;
+
         if (!isSupportFlash()){
             Toast.makeText(context,context.getString(R.string.msg_not_support_flashlight),Toast.LENGTH_SHORT).show();
             // TODO 设备不支持闪光灯
@@ -83,6 +88,8 @@ public class Camera2Impl implements LightCamera{
         if (isOpenCamera) {
             isOpenCamera = false;
             cameraDevice.close();
+            cameraListener.onCameraStateChanged(false); //TODO 回调
+            cameraDevice = null;
         } else {
             isOpenCamera = true;
             turnOnCamera2();
@@ -104,6 +111,8 @@ public class Camera2Impl implements LightCamera{
                         Toast.makeText(context,context.getString(R.string.msg_without_camera_permission),Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+                    isFinish = false;
                     cameraManager.openCamera(cameraId, new CameraDevice.StateCallback() {
                         @Override
                         public void onOpened(@NonNull CameraDevice camera) {
@@ -123,14 +132,18 @@ public class Camera2Impl implements LightCamera{
 
                         @Override
                         public void onDisconnected(@NonNull CameraDevice camera) {
+                            Log.d(TAG,"cameraDevice onDisconnect");
                             cameraDevice = camera;
+                            isFinish = true;
                         }
 
                         @Override
                         public void onError(@NonNull CameraDevice camera, int error) {
                             cameraDevice = camera;
+                            isFinish = true;
                         }
                     },null);
+                    break;
 
                 }
             }
@@ -188,13 +201,11 @@ public class Camera2Impl implements LightCamera{
         return flag;
     }
 
+
     public boolean getOpenCamera(){
         return isOpenCamera;
+
     }
 
-    @Override
-    public void setOpenCamera(boolean isOpen) {
-        this.isOpenCamera = isOpen;
-    }
 
 }

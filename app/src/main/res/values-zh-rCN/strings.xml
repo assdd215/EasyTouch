@@ -13,17 +13,24 @@
     <string name="menu_home">主页</string>
     <string name="menu_boost">一键加速</string>
     <string name="menu_commend">评论</string>
-    <string name="menu_privacy">声明</string>
 
     <string-array name="commonly_used_apps">
         <item>@string/qq_package</item>
         <item>@string/wechat_package</item>
         <item>@string/netEase_music_package</item>
+        <item>@string/bilibili_package</item>
+        <item>@string/weibo_package</item>
+        <item>@string/zhihu_package</item>
+        <item>@string/baiduMap_package</item>
     </string-array>
 
     <string name="qq_package">com.tencent.mobileqq</string>
     <string name="wechat_package">com.tencent.mm</string>
     <string name="netEase_music_package">com.netease.cloudmusic</string>
+    <string name="bilibili_package">tv.danmaku.bili</string>
+    <string name="weibo_package">com.sina.weibo</string>
+    <string name="zhihu_package">com.zhihu.android</string>
+    <string name="baiduMap_package">com.baidu.BaiduMap</string>
 
     <string name="setting_openFloatingWindow">打开悬浮窗</string>
     <string name="setting_openScreenshot">开启截图功能</string>
@@ -47,7 +54,8 @@
     <string name="msg_reOpen_screenshot">请重新开启截图功能！</string>
     <string name="msg_without_root_screenshot">检测到不具备ROOT权限！请开启ROOT权限后再使用截图功能！</string>
     <string name="msg_screenshot_success">截图成功！图片保存在</string>
-    <string name="msg_screenshot_fail">截图失败！请检查文件权限是否开启后重新打开截图功能尝试！</string>
+    <string name="msg_screen_fail">截图失败！</string>
+    <string name="msg_screenshot_fail">截图失败！请检查文件权限是否开启后重新尝试！</string>
     <string name="msg_memory_cleared">加速完毕！已到最佳状态！</string>
     <string name="msg_memory_clear_with_number">加速完毕！已清除内存 </string>
     <string name="toast_after_goto_float_window_permission">请在“权限管理”界面找到EasyTouch，打开“允许出现在其他应用上”权限!</string>
@@ -55,4 +63,12 @@
 
     <string name="brand_xiaomi">Xiaomi</string>
     <string name="brand_nexus">google</string>
+
+    <string name="hint_open_accessibility">1.点击 \"无障碍\" \n2.请找到\" %1$s \"并选择开启</string>
+    <string name="msg_accessibility_description">请点击右上角开关开启服务。\n点击开关后，你会收到系统提示手机您的个人信息，这是系统默认的授权提示文字。真实的情况是我们不会手机您的任何信息，请放心使用！</string>
+    <string name="text_IKnow">我知道了</string>
+    <string name="hint_open_float_window">1.找到并点击\"EasyTouch\". \n2.找到并打开\"允许其他应用的上层显示\"选项</string>
+
+    <string name="INSTALL">安装</string>
+    <string name="NEXT">下一步</string>
 </resources>

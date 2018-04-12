@@ -24,7 +24,6 @@ import android.widget.ImageView;
 
 import com.assistivetool.booster.easytouch.R;
 
-
 /**
  * Created by Aria on 2017/7/28.
  */

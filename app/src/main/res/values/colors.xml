@@ -11,4 +11,8 @@
     <color name="colorGreen">#728e43</color>
 
     <color name="colorSettingItemColor">#817b7b</color>
+
+    <color name="colorDialogBackground">#24140b</color>
+
+    <color name="colorCommonDialogTextColor">#24140b</color>
 </resources>

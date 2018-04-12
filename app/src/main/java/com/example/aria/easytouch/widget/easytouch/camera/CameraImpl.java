@@ -7,7 +7,6 @@ import android.hardware.Camera;
 import android.util.Log;
 import android.widget.Toast;
 
-
 import com.assistivetool.booster.easytouch.R;
 
 import java.util.List;
@@ -16,7 +15,7 @@ import java.util.List;
  * Created by Aria on 2017/7/21.
  */
 
-public class CameraImpl implements LightCamera{
+public class CameraImpl extends LightCamera{
 
     private static final String TAG = "CameraImpl";
 
@@ -30,16 +29,6 @@ public class CameraImpl implements LightCamera{
     }
 
     @Override
-    public boolean getOpenCamera() {
-        return isOpenCamera;
-    }
-
-    @Override
-    public void setOpenCamera(boolean isOpen) {
-        this.isOpenCamera = isOpen;
-    }
-
-    @Override
     public void turnOnLight() {
 
         if (!isSupportFlash()){
@@ -50,6 +39,7 @@ public class CameraImpl implements LightCamera{
         if (isOpenCamera) {
             isOpenCamera = false;
             turnOffCamera();
+
         }else {
             isOpenCamera = true;
             turnOnCamera();
@@ -57,6 +47,7 @@ public class CameraImpl implements LightCamera{
     }
 
     private void turnOnCamera(){
+        isFinish = false;
         if (camera != null) camera.stopPreview();
         camera = Camera.open();
         Camera.Parameters parameters = camera.getParameters();
@@ -69,6 +60,7 @@ public class CameraImpl implements LightCamera{
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 camera.setParameters(parameters);
                 camera.startPreview();
+
                 Toast.makeText(context,context.getString(R.string.msg_flashlight_open),Toast.LENGTH_SHORT).show();
             }else {
                 camera.release();
@@ -77,6 +69,8 @@ public class CameraImpl implements LightCamera{
                 Toast.makeText(context,context.getString(R.string.msg_not_support_flashlight),Toast.LENGTH_SHORT).show();
             }
         }
+
+        isFinish = true;
     }
 
     public void turnOffCamera() {
@@ -107,6 +101,8 @@ public class CameraImpl implements LightCamera{
                 Log.e(TAG, "FLASH_MODE_OFF not supported");
             }
         }
+
+        cameraListener.onCameraStateChanged(false);
     }
 
     public boolean isSupportFlash(){
@@ -121,4 +117,5 @@ public class CameraImpl implements LightCamera{
         }
         return flag;
     }
+
 }

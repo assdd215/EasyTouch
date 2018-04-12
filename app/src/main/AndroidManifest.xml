@@ -20,13 +20,19 @@
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE"/>
+
     <application
         android:name="com.example.aria.easytouch.base.EasyTouchApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
-        android:hardwareAccelerated="true"
+        android:supportsRtl="true"
         android:theme="@style/SettingActivityTheme">
         <activity
             android:name="com.flurry.android.FlurryFullscreenTakeoverActivity"
@@ -39,24 +45,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.aria.easytouch.ui.setting.SettingActivity"/>
-
-        <activity android:name="com.example.aria.easytouch.activity.PreScreenshotActivity"/>
-
-        <activity android:name="com.example.aria.easytouch.activity.MyActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-
-        <service android:name="com.example.aria.easytouch.service.EasyTouchService" />
-
-        <service android:name="com.example.aria.easytouch.service.MyService"/>
-
-        <service android:name="com.example.aria.easytouch.service.MyJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service android:name="com.example.aria.easytouch.service.easytouch.EasyTouchService" />
 
         <receiver android:name="com.example.aria.easytouch.broadcast.BootCompleteReceiver">
             <intent-filter>
@@ -64,6 +53,38 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
+
+        <activity android:name="com.example.aria.easytouch.widget.easytouch.screenshot.BlankActivity"
+            android:theme="@style/TranslucentTheme"/>
+
+        <activity android:name="com.example.aria.easytouch.ui.hint.HintActivity"
+            android:theme="@style/HintStyle"
+            android:launchMode="singleTask" />
+
+        <!--测试用-->
+        <activity android:name="com.example.aria.easytouch.activity.MyActivity">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <!--这个可以不用-->
+        <provider
+            android:exported="false"
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.aria.easytouch.provider.EasyTouchFileProvider"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
+
+
+
+
+
     </application>
 
 </manifest>
