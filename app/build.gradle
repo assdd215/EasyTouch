@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.assistivetool.booster.easytouch"
         minSdkVersion 18
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 2
         versionName "1.1_20170802"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -26,15 +26,15 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
-    compile 'com.android.support:gridlayout-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile 'com.android.support:gridlayout-v7:27.1.1'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:cardview-v7:27.1.1'
+    compile 'com.android.support:recyclerview-v7:27.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
     testCompile 'junit:junit:4.12'
-    compile 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.7heaven.ioswidget:iosswitch:0.6'
     // Required for Flurry Analytics integration
     compile 'com.flurry.android:analytics:7.0.0@aar'
@@ -42,10 +42,10 @@ dependencies {
     compile 'com.flurry.android:ads:7.0.0@aar'
     compile files('libs/AndroidScreenCap.jar')
     compile 'org.jetbrains:annotations-java5:15.0'
-    compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.google.code.gson:gson:2.8.4'
     compile 'com.github.promeg:tinypinyin:2.0.3'
     // TinyPinyin核心包，约80KB
     compile 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
     // 可选，适用于Android的中国地区词典
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.3'
 }

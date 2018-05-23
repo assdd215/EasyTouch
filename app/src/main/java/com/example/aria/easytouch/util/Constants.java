@@ -1,5 +1,7 @@
 package com.example.aria.easytouch.util;
 
+import android.view.WindowManager;
+
 /**
  * Created by Aria on 2017/7/19.
  */
@@ -25,4 +27,6 @@ public class Constants {
     public static final String DOWNLOAD_URL = "DOWNLOAD_URL";
     public static final String DOWNLOAD_FILEPATH = "DOWNLOAD_FILEPATH";
     public static final String ACTION_ACTIVATE_APK = "ACTION_ACTIVATE_APK";
+
+    public static int WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_PHONE;
 }

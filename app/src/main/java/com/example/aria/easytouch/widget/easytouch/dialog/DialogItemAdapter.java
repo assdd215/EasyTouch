@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.AsyncTask;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +41,7 @@ public class DialogItemAdapter extends RecyclerView.Adapter<MyViewHolder>{
     public DialogItemAdapter(Context context){
         this.context = context;
         inflater = LayoutInflater.from(context);
+        new UpdateListTask().execute();
     }
 
 
@@ -177,7 +177,6 @@ public class DialogItemAdapter extends RecyclerView.Adapter<MyViewHolder>{
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
-        AsyncTaskCompat.executeParallel(new UpdateListTask());
     }
 
     public interface OnItemClickListener{
@@ -210,8 +209,8 @@ class MyViewHolder extends RecyclerView.ViewHolder{
     public MyViewHolder(View itemView) {
         super(itemView);
 
-        charTitle = (TextView) itemView.findViewById(R.id.item_char_title);
-        itemAppGrid = (GridLayout) itemView.findViewById(R.id.item_app_grid);
-        itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
+        charTitle = itemView.findViewById(R.id.item_char_title);
+        itemAppGrid = itemView.findViewById(R.id.item_app_grid);
+        itemLayout = itemView.findViewById(R.id.item_layout);
     }
 }

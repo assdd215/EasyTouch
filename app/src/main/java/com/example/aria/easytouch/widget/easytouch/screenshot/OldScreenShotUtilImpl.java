@@ -21,8 +21,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.os.AsyncTask;
 import android.os.Handler;
-import android.support.v4.os.AsyncTaskCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -181,7 +181,8 @@ public class OldScreenShotUtilImpl implements ScreenShotUtil{
                 mScreenBitmap.prepareToDraw();
 
                 SaveTask saveTask = new SaveTask(context,onScreenshotEventListener);
-                AsyncTaskCompat.executeParallel(saveTask,mScreenBitmap);
+
+                saveTask.execute(mScreenBitmap);
 //                saveBitmap2file(context, mScreenBitmap, fileFullPath);
             }else {
                 Toast.makeText(context,context.getString(R.string.msg_without_root_screenshot),Toast.LENGTH_SHORT).show();

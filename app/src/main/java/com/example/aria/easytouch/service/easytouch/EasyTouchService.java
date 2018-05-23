@@ -17,8 +17,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v4.os.AsyncTaskCompat;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -116,7 +115,6 @@ public class EasyTouchService extends Service{
         initData();
         initReceiver();
         setForeground();
-        AsyncTaskCompat.executeParallel(new ApkUtilTask());
 
     }
 
@@ -125,7 +123,7 @@ public class EasyTouchService extends Service{
         //初始化WIndowManager
         windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         windowLayoutParams = new WindowManager.LayoutParams();
-        windowLayoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        windowLayoutParams.type = Constants.WINDOWLAYOUTPARAMS_TYPE;
         windowLayoutParams.format = PixelFormat.RGBA_8888;
         windowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 
@@ -410,10 +408,10 @@ public class EasyTouchService extends Service{
             notification1 = builder1.build();
         }else {
             // TODO JELLY_BEAN前创建notification的方法
-            notification1 = new NotificationCompat.Builder(getApplicationContext())
+            notification1 = new Notification.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle("MyTItile")
-                    .setContentText("test").getNotification();
+                    .setContentText("test").build();
         }
         return notification1;
     }

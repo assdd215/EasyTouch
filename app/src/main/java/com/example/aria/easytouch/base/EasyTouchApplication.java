@@ -2,10 +2,13 @@ package com.example.aria.easytouch.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
+import android.view.WindowManager;
 
+import com.example.aria.easytouch.util.Constants;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryAgentListener;
 
@@ -23,8 +26,7 @@ public class EasyTouchApplication extends MultiDexApplication{
     @Override
     public void onCreate() {
         super.onCreate();
-        initFlurry();
-
+        initConstants();
     }
 
     private void initFlurry(){
@@ -44,6 +46,14 @@ public class EasyTouchApplication extends MultiDexApplication{
                 .withLogLevel(Log.VERBOSE)
                 .withListener(flurryAgentListener)
                 .build(this, FLURRY_API_KEY);
+    }
+
+    private void initConstants() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            Constants.WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        }else {
+            Constants.WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_PHONE;
+        }
     }
 
 

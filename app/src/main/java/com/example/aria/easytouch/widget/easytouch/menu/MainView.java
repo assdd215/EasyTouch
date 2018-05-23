@@ -150,12 +150,11 @@ public class MainView {
         boolean flag = true;
 
         MenuLayout itemLayout = (MenuLayout) LayoutInflater.from(context).inflate(R.layout.float_menu_item,null);
-        ImageView iconView = (ImageView) itemLayout.findViewById(R.id.iconView);
-        TextView titleView = (TextView) itemLayout.findViewById(R.id.titleView);
-        ImageView deleteIcon = (ImageView) itemLayout.findViewById(R.id.deleteIcon);
+        ImageView iconView = itemLayout.findViewById(R.id.iconView);
+        TextView titleView = itemLayout.findViewById(R.id.titleView);
+        ImageView deleteIcon = itemLayout.findViewById(R.id.deleteIcon);
         itemLayout.setOnLongClickListener(onMenuItemsLongClickListener);
         itemLayout.setId(itemModelList.size()); //itemLayout的id即为对应的pos
-
 
         switch (type){
             case FloatMenuItem.TYPE_SHORTCUT:
@@ -179,8 +178,8 @@ public class MainView {
             @Override
             public void onClick(View v) {
                 RelativeLayout relativeLayout = (RelativeLayout) v.getParent();
-                ImageView iconView = (ImageView) relativeLayout.findViewById(R.id.iconView);
-                TextView titleView = (TextView) relativeLayout.findViewById(R.id.titleView);
+                ImageView iconView = relativeLayout.findViewById(R.id.iconView);
+                TextView titleView = relativeLayout.findViewById(R.id.titleView);
 
                 relativeLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -229,8 +228,8 @@ public class MainView {
 
         ImageView iconView = model.getImageView();
         RelativeLayout itemLayout = model.getItemLayout();
-        TextView titleView = (TextView) itemLayout.findViewById(R.id.titleView);
-        ImageView deleteIcon = (ImageView) itemLayout.findViewById(R.id.deleteIcon);
+        TextView titleView = itemLayout.findViewById(R.id.titleView);
+        ImageView deleteIcon = itemLayout.findViewById(R.id.deleteIcon);
         switch (type){
             case FloatMenuItem.TYPE_SHORTCUT:
             case FloatMenuItem.TYPE_FUNCTION:

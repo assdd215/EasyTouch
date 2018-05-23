@@ -518,6 +518,8 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
     //创建选择所有app的对话框
     private void buildChooseAllAppsDialog(final int position){
         View baseView = LayoutInflater.from(context).inflate(R.layout.dialog_all_apps,null,false);
+        RecyclerView Container = baseView.findViewById(R.id.Container);
+        Container.setLayoutManager(new LinearLayoutManager(context));
         DialogItemAdapter adapter = new DialogItemAdapter(context);
         adapter.setOnItemClickListener(new DialogItemAdapter.OnItemClickListener() {
             @Override
@@ -540,20 +542,19 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
 
             @Override
             public void onPostDataLoaded(DialogItemAdapter adapter1) {
-                Log.d(TAG,"onPostDataLoaded");
                 View baseView = dialog.getWindow().findViewById(R.id.baseView);
-                RecyclerView Container = (RecyclerView) baseView.findViewById(R.id.Container);
+                RecyclerView Container = baseView.findViewById(R.id.Container);
                 Container.setAdapter(adapter1);
                 Container.setLayoutManager(new LinearLayoutManager(context));
                 Container.postInvalidate();
-                ProgressBar bar = (ProgressBar) baseView.findViewById(R.id.progressbar);
+                ProgressBar bar = baseView.findViewById(R.id.progressbar);
                 bar.setVisibility(View.GONE);
             }
         });
         dialog = new AlertDialog.Builder(context)
                 .setView(baseView)
                 .create();
-        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.getWindow().setType(Constants.WINDOWLAYOUTPARAMS_TYPE);
         dialog.show();
     }
 

@@ -16,9 +16,7 @@ import android.media.projection.MediaProjectionManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.RequiresApi;
-import android.support.v4.os.AsyncTaskCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
@@ -27,11 +25,6 @@ import android.widget.Toast;
 import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
-import com.example.aria.easytouch.widget.easytouch.screenshot.FileUtil;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * Created by Aria on 2017/7/19.
@@ -138,7 +131,7 @@ public class NewScreenShotUtilImpl implements ScreenShotUtil{
         }else {
             Bitmap bitmap = Utils.image2Bitmap(image);
             SaveTask saveTask = new SaveTask(context,onScreenshotEventListener);
-            AsyncTaskCompat.executeParallel(saveTask,bitmap);
+            saveTask.execute(bitmap);
             onScreenshotEventListener.onImageCaptured(image);
         }
     }
