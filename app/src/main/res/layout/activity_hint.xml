@@ -21,15 +21,16 @@
         android:layout_height="wrap_content"
         android:text="@string/text_IKnow"
         android:id="@+id/btnHint"
-        android:layout_marginRight="50dp"
         android:textColor="@android:color/white"
         android:background="@drawable/drawable_hint_btn"
-        android:layout_marginTop="47dp"
-        android:padding="10dp"
+        android:layout_marginTop="40dp"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:layout_below="@+id/hint_title"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="50dp" />
+        android:layout_marginEnd="42dp" />
 
 
 </RelativeLayout>

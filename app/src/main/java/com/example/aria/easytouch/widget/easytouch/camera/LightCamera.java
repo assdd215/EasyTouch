@@ -1,7 +1,5 @@
 package com.example.aria.easytouch.widget.easytouch.camera;
 
-import android.content.Context;
-
 /**
  * Created by Aria on 2017/7/21.
  */

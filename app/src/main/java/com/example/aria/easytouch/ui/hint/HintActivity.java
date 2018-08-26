@@ -66,4 +66,9 @@ public class HintActivity extends Activity{
         Utils.log(TAG,"onPause");
         super.onPause();
     }
+
+    @Override
+    public void finish() {
+        super.finish();
+    }
 }

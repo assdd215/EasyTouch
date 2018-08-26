@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity{
                     if (contextWeakReference != null){
                         Intent intent = new Intent(contextWeakReference.get(),HintActivity.class);
                         intent.putExtra(Constants.HINT_TEXT,msg.obj.toString());
-
                         contextWeakReference.get().startActivity(intent);
                     }
                     break;

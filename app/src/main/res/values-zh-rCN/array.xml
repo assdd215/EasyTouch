@@ -17,5 +17,29 @@
         <item>Fancy VPN</item>
     </string-array>
 
+    <string-array name="menu_title_list">
+        <item>@string/menu_easytouch_enable</item>
+        <item>@string/menu_init_setting</item>
+        <item>@string/menu_theme</item>
+        <item>@string/menu_notification_setting</item>
+        <item>@string/menu_gesture</item>
+        <item>@string/menu_display_setting</item>
+        <item>@string/menu_advanced_setting</item>
+        <item>@string/menu_rate_us</item>
+        <item>@string/menu_share</item>
+        <item>@string/menu_help</item>
+    </string-array>
+    
+
+    <!--<string name="menu_easytouch_enable">开启EasyTouch</string>-->
+    <!--<string name="menu_init_setting">初始设置</string>-->
+    <!--<string name="menu_theme">主题</string>-->
+    <!--<string name="menu_notification_setting">通知设置</string>-->
+    <!--<string name="menu_gesture">悬浮按钮手势</string>-->
+    <!--<string name="menu_display_setting">显示设置</string>-->
+    <!--<string name="menu_advanced_setting">高级设置</string>-->
+    <!--<string name="menu_rate_us">五星好评</string>-->
+    <!--<string name="menu_share">分享</string>-->
+    <!--<string name="menu_help">帮助</string>-->
 
 </resources>

@@ -71,4 +71,17 @@
 
     <string name="INSTALL">安装</string>
     <string name="NEXT">下一步</string>
+
+    <string name="menu_easytouch_enable">开启EasyTouch</string>
+    <string name="menu_init_setting">初始设置</string>
+    <string name="menu_theme">主题</string>
+    <string name="menu_notification_setting">通知设置</string>
+    <string name="menu_gesture">悬浮按钮手势</string>
+    <string name="menu_display_setting">显示设置</string>
+    <string name="menu_advanced_setting">高级设置</string>
+    <string name="menu_rate_us">五星好评</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_help">帮助</string>
+    <string name="menu_enable_boot">允许开机自动启动</string>
+    <string name="menu_enable_boot_sub">避免重启后还需要手动启动</string>
 </resources>

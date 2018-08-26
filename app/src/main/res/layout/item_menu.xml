@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:minHeight="80dp"
+    android:paddingStart="10dp"
+    android:paddingTop="8dp"
+    android:background="?android:attr/selectableItemBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:id="@+id/item_icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_flare_black"
+            android:scaleType="fitCenter"
+            android:layout_centerVertical="true"
+            android:tint="@color/menu_item_icon_color"/>
+
+    <LinearLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/item_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/menu_easytouch_enable"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/item_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:text="副标题"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+
+
+    <Switch
+        android:id="@+id/item_switch"
+        android:layout_width="wrap_content"
+        android:switchMinWidth="48dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        android:shadowColor="@color/menu_item_icon_color" />
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/item_hint"
+        android:text="悬浮面板"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
+        />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@id/item_icon"/>
+
+    </RelativeLayout>

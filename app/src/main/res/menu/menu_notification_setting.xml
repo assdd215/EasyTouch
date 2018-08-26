@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/add" android:title="add" android:icon="@drawable/nf_app_add_normal"
+        app:showAsAction="always"/>
+    <item android:id="@+id/delete" android:title="delete" android:icon="@drawable/nf_app_delete_normal"
+        app:showAsAction="always"/>
+
+</menu>

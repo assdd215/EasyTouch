@@ -14,6 +14,10 @@
         <item name="colorAccent">#728e43</item>
     </style>
 
+    <style name="NewActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">#24292f</item>
+    </style>
+
     <style name="IconViewAnimator">
         <item name="android:windowEnterAnimation">@anim/anim_iconview_enter</item>
         <item name="android:windowExitAnimation">@anim/anim_iconview_exit</item>
@@ -39,19 +43,22 @@
         <item name="android:layout_width">32dp</item>
         <item name="android:layout_height">32dp</item>
     </style>
+
     <style name="menu_layout">
         <item name="android:layout_height">72dp</item>
         <item name="android:layout_width">72dp</item>
         <item name="android:orientation">vertical</item>
     </style>
-    
+
     <style name="HintStyle" parent="@android:style/Theme.Translucent.NoTitleBar">
         <item name="android:windowAnimationStyle">@style/HintStyle.ActivityAnim</item>
     </style>
 
-    <style name="HintStyle.ActivityAnim">
-        <item name="android:windowEnterAnimation">@anim/anim_hint_enter</item>
-        <item name="android:windowHideAnimation">@anim/anim__hint_exit</item>
+    <style name="HintStyle.ActivityAnim" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/anim_hint_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/anim__hint_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/anim_hint_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/anim__hint_exit</item>
     </style>
 
     <style name="MyProgressStyle">
@@ -73,5 +80,9 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorBackground">@android:color/transparent</item>
     </style>
+
+    <style name="SettingActivityTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="SettingActivityTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -9,4 +9,7 @@
     <dimen name="setting_switch_height">35dp</dimen>
     <dimen name="setting_switch_width">50dp</dimen>
     <dimen name="global_screenshot_bg_padding">10dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.assistivetool.booster.easytouch.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Aria on 2017/7/18.

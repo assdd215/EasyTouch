@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#24292f</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorCommonBackground">#5d5d5d</color>
@@ -9,10 +9,15 @@
     <color name="colorTitle">#dcddcf</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGreen">#728e43</color>
+    <color name="color_dark_green">#4b595f</color>
 
     <color name="colorSettingItemColor">#817b7b</color>
 
     <color name="colorDialogBackground">#24140b</color>
 
     <color name="colorCommonDialogTextColor">#24140b</color>
+
+    <color name="toolbar_color">#30353b</color>
+    <color name="menu_item_icon_color">#02968a</color>
+    <color name="light_grey">#dcdcdc</color>
 </resources>

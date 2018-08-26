@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="问题反馈" app:showAsAction="never"/>
+    <item android:title="检查更新" app:showAsAction="never"/>
+    <item android:title="关于我们" app:showAsAction="never"/>
+
+
+</menu>
