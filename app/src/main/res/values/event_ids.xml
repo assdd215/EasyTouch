@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="TEST_ID" type="id"/>
+
+    <item name="STOP_EASY_TOUCH_SERVICE" type="id"/>
+</resources>

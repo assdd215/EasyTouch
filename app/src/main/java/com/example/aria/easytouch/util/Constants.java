@@ -22,5 +22,5 @@ public class Constants {
     public static final String SETTING_TITLE = "SETTING_TITLE";
     public static final String SETTING_TYPE = "SETTING_TYPE";
 
-    public static int WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_PHONE;
+    public static int WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_TOAST;
 }

@@ -61,9 +61,9 @@ import java.util.List;
  * Created by Aria on 2017/7/21.
  */
 
-public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
+public class MenuViewManager implements OnMenuHolderEventListener{
 
-    private static final String TAG = "NewEasyTouchMenuHolder";
+    private static final String TAG = "MenuViewManager";
 
     private Context context;
     private MainView mainView;
@@ -109,7 +109,7 @@ public class NewEasyTouchMenuHolder implements OnMenuHolderEventListener{
         }
     };
 
-    public NewEasyTouchMenuHolder(Context context){
+    public MenuViewManager(Context context){
         this.context = context;
         mainView = new MainView(context);
         initData();

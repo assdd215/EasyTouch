@@ -1,16 +1,20 @@
 package com.example.aria.easytouch.ui.hint;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.util.Constants;
 import com.example.aria.easytouch.util.Utils;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,19 +60,19 @@ public class HintActivity extends Activity{
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Utils.log(TAG,"onDestroy");
-    }
-
-    @Override
-    protected void onPause() {
-        Utils.log(TAG,"onPause");
-        super.onPause();
-    }
-
-    @Override
     public void finish() {
         super.finish();
+    }
+
+    public static void show(final Context context, final String message, long millTimes) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(context,HintActivity.class);
+                intent.putExtra(Constants.HINT_TEXT,message);
+                context.startActivity(intent);
+            }
+        },millTimes);
     }
 }

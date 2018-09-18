@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import com.example.aria.easytouch.util.Constants;
 import com.flurry.android.FlurryAgent;
 import com.flurry.android.FlurryAgentListener;
+import com.luzeping.aria.commonutils.notification.NotificationCenter;
+import com.luzeping.aria.commonutils.utils.Device;
 
 
 /**
@@ -27,6 +29,8 @@ public class EasyTouchApplication extends MultiDexApplication{
     public void onCreate() {
         super.onCreate();
         initConstants();
+
+        NotificationCenter.init(this);
     }
 
     private void initFlurry(){
@@ -49,7 +53,10 @@ public class EasyTouchApplication extends MultiDexApplication{
     }
 
     private void initConstants() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+
+        Device.setUp(this);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Constants.WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         }else {
             Constants.WINDOWLAYOUTPARAMS_TYPE = WindowManager.LayoutParams.TYPE_PHONE;

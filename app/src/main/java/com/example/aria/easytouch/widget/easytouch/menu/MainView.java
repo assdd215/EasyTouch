@@ -124,7 +124,8 @@ public class MainView {
                 if (deleteVisible)
                     hideDeleteButtons();
                 else
-                    onMenuHolderEventListener.afterItemClick(v);
+                    if (onMenuHolderEventListener != null)
+                        onMenuHolderEventListener.afterItemClick(v);
             }
         });
 

@@ -43,6 +43,13 @@
             </intent-filter>
         </receiver>
 
+        <activity android:name="com.example.aria.easytouch.activity.SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.example.aria.easytouch.widget.easytouch.screenshot.BlankActivity"
             android:theme="@style/TranslucentTheme" />
@@ -50,14 +57,10 @@
             android:name="com.example.aria.easytouch.ui.hint.HintActivity"
             android:launchMode="singleTask"
             android:theme="@style/HintStyle" />
-        <activity android:name="com.example.aria.easytouch.activity.NewActivity"
+        <activity android:name="com.example.aria.easytouch.activity.MainAppActivity"
             android:theme="@style/NewActivityTheme"
             android:label="">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <service android:name="com.example.aria.easytouch.service.setting.NotificationMonitorService"
@@ -73,6 +76,10 @@
 
         <activity android:name="com.example.aria.easytouch.activity.SettingActivity"
             android:theme="@style/NewActivityTheme"/>
+
+        <activity android:name="com.example.aria.easytouch.test.TestActivity"/>
+
+        <activity android:name="com.example.aria.easytouch.test.Test2Activity"/>
     </application>
 
 </manifest>
