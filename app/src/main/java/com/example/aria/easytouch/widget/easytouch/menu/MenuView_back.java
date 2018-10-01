@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.model.FloatMenuItem;
 import com.example.aria.easytouch.util.Utils;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by Aria on 2017/7/21.
  */
 
-public class MainView {
+public class MenuView_back {
 
     private static final int ITEM_SIZE = 72;
 
@@ -34,9 +35,10 @@ public class MainView {
 
     private boolean deleteVisible ;
 
-    public MainView(Context context){
+    public MenuView_back(Context context){
         this.context = context;
         initMainView();
+
     }
 
     private View.OnLongClickListener onMenuItemsLongClickListener = new View.OnLongClickListener() {
@@ -137,7 +139,7 @@ public class MainView {
         RelativeLayout.LayoutParams menuParams = new RelativeLayout.LayoutParams(Utils.dip2px(context,270),Utils.dip2px(context,270));
         menuParams.addRule(RelativeLayout.CENTER_IN_PARENT);
         menuLayout.setLayoutParams(menuParams);
-        menuLayout.setBackgroundResource(R.drawable.item_group);
+        menuLayout.setBackgroundResource(R.drawable.bg_30353b_radius_8);
         menuLayout.addView(viewPager);
         baseLayout.addView(menuLayout);
 

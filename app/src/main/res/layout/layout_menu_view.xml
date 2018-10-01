@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/root"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:background="@android:color/transparent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_search"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_30353b_radius_8"
+                android:textSize="14sp"
+                android:text="点击搜索"
+                android:textColor="@color/color_b3b4b8"
+                android:gravity="center_vertical"
+                android:paddingLeft="18dp"/>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search_logo"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:tint="@android:color/white"
+                android:layout_marginRight="18dp"/>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="288dp"
+            android:id="@+id/rl_menu_table"
+            android:background="@drawable/bg_30353b_radius_8">
+            <com.example.aria.easytouch.widget.easytouch.pager.EndlessViewPager
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/viewPager"
+                android:overScrollMode="never" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

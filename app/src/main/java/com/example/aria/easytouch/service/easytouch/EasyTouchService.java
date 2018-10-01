@@ -12,15 +12,15 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.assistivetool.booster.easytouch.R;
 import com.example.aria.easytouch.base.BaseService;
+import com.example.aria.easytouch.iview.BaseMenuItemEventDecerator;
+import com.example.aria.easytouch.iview.OnMenuItemEventListener;
 import com.example.aria.easytouch.util.Constants;
-import com.example.aria.easytouch.widget.easytouch.BaseMenuHolderEventDecerator;
 import com.example.aria.easytouch.widget.easytouch.MenuViewManager;
-import com.example.aria.easytouch.widget.easytouch.OnMenuHolderEventListener;
-import com.example.aria.easytouch.widget.easytouch.menu.ItemModel;
 import com.luzeping.aria.commonutils.notification.NotificationCenter;
 import com.luzeping.aria.commonutils.utils.Device;
 
@@ -52,7 +52,7 @@ public class EasyTouchService extends BaseService{
     private MenuViewManager menuViewManager;
 
     private WindowManager windowManager;
-    private WindowManager.LayoutParams windowLayoutParams;
+    private WindowManager.LayoutParams iconViewLayoutParams;
 
     @Nullable
     @Override
@@ -73,12 +73,6 @@ public class EasyTouchService extends BaseService{
     @Override
     protected void init() {
         windowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        windowLayoutParams = new WindowManager.LayoutParams();
-        windowLayoutParams.type = Constants.WINDOWLAYOUTPARAMS_TYPE;
-        windowLayoutParams.format = PixelFormat.RGBA_8888; //设置窗口透明
-        windowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL // 设置窗口外可接受点击事件
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; // 设置不接收输入
-
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(Constants.SHARE_DATA,MODE_PRIVATE);
         sharedPreferences.edit()
                 .putBoolean(Constants.STATE_FLOATWINDOW,true)
@@ -89,40 +83,53 @@ public class EasyTouchService extends BaseService{
 
     private void addIconView(){
 
-        if (menuViewManager != null && menuViewManager.getMainView() != null)
-            windowManager.removeView(menuViewManager.getMainView());
-
-        windowLayoutParams.x = iconViewX;
-        windowLayoutParams.y = iconViewY;
-        windowLayoutParams.windowAnimations = R.style.IconViewAnimator;
-        windowLayoutParams.width = Device.dip2px(getApplicationContext(),ICON_SIZE);
-        windowLayoutParams.height = Device.dip2px(getApplicationContext(),ICON_SIZE);
-        windowLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
-
+        if (menuViewManager != null && menuViewManager.getMenuView() != null) {
+            menuViewManager.getMenuView().setVisibility(View.GONE);
+        }
         if (mIconView == null) {
             mIconView = new IconView(getApplicationContext());
+
+            iconViewLayoutParams = new WindowManager.LayoutParams();
+            iconViewLayoutParams.type = Constants.WINDOWLAYOUTPARAMS_TYPE;
+            iconViewLayoutParams.format = PixelFormat.RGBA_8888; //设置窗口透明
+            iconViewLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL // 设置窗口外可接受点击事件
+                    | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE; // 设置不接收输入
+            iconViewLayoutParams.x = iconViewX;
+            iconViewLayoutParams.y = iconViewY;
+            iconViewLayoutParams.windowAnimations = R.style.IconViewAnimator;
+            iconViewLayoutParams.width = Device.dip2px(getApplicationContext(),ICON_SIZE);
+            iconViewLayoutParams.height = Device.dip2px(getApplicationContext(),ICON_SIZE);
+            iconViewLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
+            windowManager.addView(mIconView,iconViewLayoutParams);
         }
-        windowManager.addView(mIconView,windowLayoutParams);
+        mIconView.setVisibility(View.VISIBLE);
     }
 
     private void addMenuView() {
-        if (mIconView != null) windowManager.removeView(mIconView);
-        if (menuViewManager == null || menuViewManager.getMainView() == null) {
+        if (mIconView != null) {
+            mIconView.setVisibility(View.GONE);
+        }
+        if (menuViewManager == null || menuViewManager.getMenuView() == null) {
             if (menuViewManager != null)
                 menuViewManager.onDestroy();
             menuViewManager = null;
             menuViewManager = new MenuViewManager(getApplicationContext());
-            menuViewManager.setOnMenuHolderEventListener(new MenuViewTouchDecorator(menuViewManager));
+            menuViewManager.setOnMenuItemEventListener(new MenuViewItemEventDecorator(menuViewManager));
+            WindowManager.LayoutParams windowLayoutParams =
+                    new WindowManager.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
+            windowLayoutParams.type = Constants.WINDOWLAYOUTPARAMS_TYPE;
+            windowLayoutParams.format = PixelFormat.TRANSLUCENT; //设置窗口透明
+            windowLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN; // 设置不接收输入
+            windowLayoutParams.alpha = 1f;
+            windowLayoutParams.x = 0;
+            windowLayoutParams.y = 0;
+            windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
+            menuViewManager.getMenuView().setVisibility(View.VISIBLE);
+            menuViewManager.loadItems();
+            windowManager.addView(menuViewManager.getMenuView(),windowLayoutParams);
         }
-        windowLayoutParams.alpha = 1f;
-        windowLayoutParams.x = 0;
-        windowLayoutParams.y = 0;
-        windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-        windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-        windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
-        menuViewManager.getMainView().setVisibility(View.VISIBLE);
-        menuViewManager.loadItems();
-        windowManager.addView(menuViewManager.getMainView(),windowLayoutParams);
+        menuViewManager.getMenuView().setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -134,8 +141,8 @@ public class EasyTouchService extends BaseService{
     public void onDestroy() {
         super.onDestroy();
         if (menuViewManager != null){
-            if (menuViewManager.getMainView() != null)
-                try {windowManager.removeView(menuViewManager.getMainView());}
+            if (menuViewManager.getMenuView() != null)
+                try {windowManager.removeView(menuViewManager.getMenuView());}
                 catch (Exception e){Log.d("MainActivity",TAG + "onDestroy easyHolder"+e.getMessage());}
             menuViewManager.onDestroy();
         }
@@ -206,8 +213,8 @@ public class EasyTouchService extends BaseService{
                     startY = event.getY();
                     startRawX = event.getRawX();
                     startRawY = event.getRawY();
-                    windowLayoutParams.alpha = 1f;
-                    windowManager.updateViewLayout(mIconView, windowLayoutParams);
+                    iconViewLayoutParams.alpha = 1f;
+                    windowManager.updateViewLayout(mIconView, iconViewLayoutParams);
                     break;
                 case MotionEvent.ACTION_UP:
                     if (!iconAllowClick) {
@@ -240,17 +247,17 @@ public class EasyTouchService extends BaseService{
         private void updateIconViewPosition(float x, float y) {
             iconViewX = (int) x;
             iconViewY = (int) y;
-            windowLayoutParams.x = (int) x;
-            windowLayoutParams.y = (int) y;
-            windowManager.updateViewLayout(mIconView, windowLayoutParams);
+            iconViewLayoutParams.x = (int) x;
+            iconViewLayoutParams.y = (int) y;
+            windowManager.updateViewLayout(mIconView, iconViewLayoutParams);
         }
 
         private void transIconView(float x,float y) {
             boolean isLeft = 2 * x <= Device.getScreenWidth();
             boolean isTop = 2 * y <= Device.getScreenHeight();
             final int finalDirection; // 判断悬浮球最终是往屏幕的哪个方向吸附
-            int deltaX = (int) (isLeft ? x : Device.getScreenWidth() - x - windowLayoutParams.width);
-            int deltaY = (int) (isTop ? y : Device.getScreenHeight() - y - windowLayoutParams.height);
+            int deltaX = (int) (isLeft ? x : Device.getScreenWidth() - x - iconViewLayoutParams.width);
+            int deltaY = (int) (isTop ? y : Device.getScreenHeight() - y - iconViewLayoutParams.height);
             if (deltaX <= deltaY)
                 finalDirection = isLeft ? DIRECTION_LEFT : DIRECTION_RIGHT;
             else
@@ -269,31 +276,31 @@ public class EasyTouchService extends BaseService{
                     Thread.sleep(10);
                     switch (finalDirection) {
                         case DIRECTION_LEFT:
-                            if (windowLayoutParams.x - TRANS_SPEED <= 0){
-                                windowLayoutParams.x = 0;
+                            if (iconViewLayoutParams.x - TRANS_SPEED <= 0){
+                                iconViewLayoutParams.x = 0;
                             } else
-                                windowLayoutParams.x = windowLayoutParams.x - TRANS_SPEED;
+                                iconViewLayoutParams.x = iconViewLayoutParams.x - TRANS_SPEED;
                             break;
 
                         case DIRECTION_RIGHT:
-                            if (windowLayoutParams.x + TRANS_SPEED >= Device.getScreenWidth() - windowLayoutParams.width / 2) {
-                                windowLayoutParams.x = Device.getScreenWidth() - windowLayoutParams.width / 2;
+                            if (iconViewLayoutParams.x + TRANS_SPEED >= Device.getScreenWidth() - iconViewLayoutParams.width / 2) {
+                                iconViewLayoutParams.x = Device.getScreenWidth() - iconViewLayoutParams.width / 2;
                             } else
-                                windowLayoutParams.x = windowLayoutParams.x + TRANS_SPEED;
+                                iconViewLayoutParams.x = iconViewLayoutParams.x + TRANS_SPEED;
                             break;
 
                         case DIRECTION_TOP:
-                            if (windowLayoutParams.y - TRANS_SPEED <= 0) {
-                                windowLayoutParams.y = 0;
+                            if (iconViewLayoutParams.y - TRANS_SPEED <= 0) {
+                                iconViewLayoutParams.y = 0;
                             } else
-                                windowLayoutParams.y = windowLayoutParams.y - TRANS_SPEED;
+                                iconViewLayoutParams.y = iconViewLayoutParams.y - TRANS_SPEED;
                             break;
 
                         case DIRECTION_BOTTOM:
-                            if (windowLayoutParams.y + TRANS_SPEED >= Device.getScreenHeight() - windowLayoutParams.height / 2) {
-                                windowLayoutParams.y = Device.getScreenHeight() - windowLayoutParams.height / 2;
+                            if (iconViewLayoutParams.y + TRANS_SPEED >= Device.getScreenHeight() - iconViewLayoutParams.height / 2) {
+                                iconViewLayoutParams.y = Device.getScreenHeight() - iconViewLayoutParams.height / 2;
                             } else
-                                windowLayoutParams.y = windowLayoutParams.y + TRANS_SPEED;
+                                iconViewLayoutParams.y = iconViewLayoutParams.y + TRANS_SPEED;
                             break;
                     }
                     emitter.onNext(finalDirection);
@@ -308,13 +315,13 @@ public class EasyTouchService extends BaseService{
 
                         @Override
                         public void onNext(Object o) {
-                            windowManager.updateViewLayout(IconView.this,windowLayoutParams);
-                            if (windowLayoutParams.x != 0 && windowLayoutParams.x != Device.getScreenWidth() - windowLayoutParams.width / 2 &&
-                                    windowLayoutParams.y != 0 && windowLayoutParams.y != Device.getScreenHeight() - windowLayoutParams.height / 2)
+                            windowManager.updateViewLayout(IconView.this, iconViewLayoutParams);
+                            if (iconViewLayoutParams.x != 0 && iconViewLayoutParams.x != Device.getScreenWidth() - iconViewLayoutParams.width / 2 &&
+                                    iconViewLayoutParams.y != 0 && iconViewLayoutParams.y != Device.getScreenHeight() - iconViewLayoutParams.height / 2)
                                 calculateTrans(finalDirection); // 检测是否到边界，没有到达则继续滚动
                             else {
-                                iconViewX = windowLayoutParams.x;
-                                iconViewY = windowLayoutParams.y;
+                                iconViewX = iconViewLayoutParams.x;
+                                iconViewY = iconViewLayoutParams.y;
                             }
 
 
@@ -334,21 +341,44 @@ public class EasyTouchService extends BaseService{
 
     }
 
-    private class MenuViewTouchDecorator extends BaseMenuHolderEventDecerator {
+    private class MenuViewItemEventDecorator extends BaseMenuItemEventDecerator {
 
-        public MenuViewTouchDecorator(OnMenuHolderEventListener listener) {
+        public MenuViewItemEventDecorator(OnMenuItemEventListener listener) {
             super(listener);
         }
 
         @Override
-        public void beforeItemPerform(View view) {
-            super.beforeItemPerform(view);
+        public int beforeItemPerform(View view, int page, int pos) {
+            return super.beforeItemPerform(view, page, pos);
         }
 
         @Override
-        public void afterItemClick(View view) {
-            super.afterItemClick(view);
-            addIconView();
+        public void onItemClick(View view, int page, int pos) {
+            super.onItemClick(view, page, pos);
+        }
+
+        @Override
+        public int afterItemClick(View view, int page, int pos) {
+            int item = super.afterItemClick(view, page, pos);
+            switch (item) {
+                case ACTION_KEEP_MENU:
+                    break;
+                case ACTION_CLOSE_MENU:
+                    addIconView();
+                    break;
+            }
+            return item;
+        }
+
+        @Override
+        public void onEmptyItemClick(View view, int page, int pos) {
+            super.onEmptyItemClick(view, page, pos);
+        }
+
+        @Override
+        public void onDeleteItemClick(View view, int page, int pos) {
+            super.onDeleteItemClick(view, page, pos);
         }
     }
+
 }

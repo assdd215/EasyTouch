@@ -20,4 +20,7 @@
     <color name="toolbar_color">#30353b</color>
     <color name="menu_item_icon_color">#02968a</color>
     <color name="light_grey">#dcdcdc</color>
+
+    <color name="color_30353b">#30353b</color>
+    <color name="color_b3b4b8">#b3b4b8</color>
 </resources>

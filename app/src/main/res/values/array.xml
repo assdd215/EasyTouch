@@ -17,4 +17,15 @@
         <item>Fancy VPN</item>
     </string-array>
 
+
+    <string-array name="array_feature_icons">
+        <item>主题</item>
+        <item>手电筒</item>
+        <item>相机</item>
+        <item>截屏</item>
+        <item>主屏</item>
+        <item>加速</item>
+        <item>WIFI</item>
+        <item>蓝牙</item>
+    </string-array>
 </resources>

@@ -153,8 +153,8 @@ public class EasyTouchService_back1 extends Service{
 
     private void addIconView(){
         if (menuViewManager != null){
-            if (menuViewManager.getMainView() != null)
-                windowManager.removeView(menuViewManager.getMainView());
+            if (menuViewManager.getMenuView() != null)
+                windowManager.removeView(menuViewManager.getMenuView());
         }
         if (iconView == null){
             iconView = new Button(getApplicationContext());
@@ -225,14 +225,13 @@ public class EasyTouchService_back1 extends Service{
 
     private void addMenuView(){
         if (iconView != null)windowManager.removeView(iconView);
-        if (menuViewManager == null || menuViewManager.getMainView() == null ){
+        if (menuViewManager == null || menuViewManager.getMenuView() == null ){
             if (menuViewManager != null){
                 //TODO 一些销毁操作
                 menuViewManager.onDestroy();
             }
             menuViewManager = null;
             menuViewManager = new MenuViewManager(getApplicationContext());
-            menuViewManager.setOnMenuHolderEventListener(new MenuHolderEventListener(menuViewManager));
             menuViewManager.setOnScreenshotEventListener(new OnScreenshotEventListener() {
                 @Override
                 public void beforeScreenshot() {
@@ -263,10 +262,10 @@ public class EasyTouchService_back1 extends Service{
         windowLayoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
         windowLayoutParams.windowAnimations = R.style.MenuViewAnimator;
-        menuViewManager.getMainView().setVisibility(View.VISIBLE);
+        menuViewManager.getMenuView().setVisibility(View.VISIBLE);
 
         menuViewManager.loadItems();
-        windowManager.addView(menuViewManager.getMainView(),windowLayoutParams);
+        windowManager.addView(menuViewManager.getMenuView(),windowLayoutParams);
 
     }
 
@@ -356,8 +355,8 @@ public class EasyTouchService_back1 extends Service{
         unregisterReceiver(serviceReceiver);
 
         if (menuViewManager != null){
-            if (menuViewManager.getMainView() != null)
-                try {windowManager.removeView(menuViewManager.getMainView());}
+            if (menuViewManager.getMenuView() != null)
+                try {windowManager.removeView(menuViewManager.getMenuView());}
                 catch (Exception e){Log.d("MainActivity",TAG + "onDestroy easyHolder"+e.getMessage());}
             menuViewManager.onDestroy();
         }
@@ -507,7 +506,7 @@ public class EasyTouchService_back1 extends Service{
             ItemModel itemModel = (ItemModel) view.getTag();
 
             if (getString(R.string.menu_screenshot).equals(itemModel.getItemTitle())){
-                menuViewManager.getMainView().setVisibility(View.GONE);
+                menuViewManager.getMenuView().setVisibility(View.GONE);
                 addIconView();
                 iconView.setVisibility(View.GONE);
             }
